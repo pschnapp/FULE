@@ -1,7 +1,11 @@
 module Container.Divided
- ( Divided(..)
+ ( Divided
  , Dynamics(..)
- , Sizing(..)
+ , Sizing
+ , sizedTop
+ , sizedLeft
+ , sizedRight
+ , sizedBottom
  ) where
 
 import Container
@@ -122,4 +126,17 @@ makeDivided divided bounds renderGroup config = do
       , setSizedOuterOf = getSizedOuter
       , multiplierOf = m
       } = config
+
+
+sizedTop :: Int -> Dynamics b -> s -> u -> Divided s b u
+sizedTop = Divided SizedTop
+
+sizedLeft :: Int -> Dynamics b -> s -> u -> Divided s b u
+sizedLeft = Divided SizedLeft
+
+sizedRight :: Int -> Dynamics b -> s -> u -> Divided s b u
+sizedRight = Divided SizedRight
+
+sizedBottom :: Int -> Dynamics b -> s -> u -> Divided s b u
+sizedBottom = Divided SizedBottom
 

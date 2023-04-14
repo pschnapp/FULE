@@ -45,7 +45,7 @@ data LayoutOpState
 type LayoutOp k = StateT LayoutOpState (Writer [Component k])
 
 runLayoutOp :: LayoutOp k () -> (LayoutDesign, [Component k])
-runLayoutOp = toOutput . runWriter . (`execStateT` (LOS makeDesign 0))
+runLayoutOp = toOutput . runWriter . (`execStateT` LOS makeDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
 
 

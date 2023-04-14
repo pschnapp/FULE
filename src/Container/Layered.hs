@@ -10,7 +10,7 @@ import Container.Item
 import Internal.Util
 
 
-data Layered k = Layered [Item k]
+newtype Layered k = Layered [Item k]
 
 -- TODO
 --  - render order
@@ -19,7 +19,7 @@ instance Container (Layered k) k where
   requiredWidth (Layered is) p = getMaxSize $ map (`requiredWidth` p) is
   requiredHeight (Layered is) p = getMaxSize $ map (`requiredHeight` p) is
   addToLayout (Layered is) bounds renderGroup = do
-    renderGroup' <- fmap Just $ fromMaybe nextRenderGroup $ pure <$> renderGroup
+    renderGroup' <- Just <$> maybe nextRenderGroup pure renderGroup
     mapM_ (\i -> addToLayout i bounds renderGroup') is
 
 layered :: [Item k] -> Layered k

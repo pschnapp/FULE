@@ -2,15 +2,16 @@ module Layout
  ( GuideID
  , DependencyType(..)
  , Relationship(..)
- , LayoutBuilder
- , builder
+ , LayoutDesign
+ , makeDesign
  , addGuide
  , Layout
- , construct
- , thaw
+ , build
+ , design
  , getGuide
  , getGuides
- , adjust
+ , reactToChange
+ , reactToChanges
  ) where
 
 import Internal.Sparse
@@ -36,23 +37,23 @@ data Relationship
   | Between (GuideID, Float) (GuideID, Float)
 
 
-data LayoutBuilder
+data LayoutDesign
   --    dependency     elasticity     constraint   guides (vector)
-  = B (Matrix Float) (Matrix Float) (Matrix Float) (Matrix Float)
+  = D (Matrix Float) (Matrix Float) (Matrix Float) (Matrix Float)
 
-type LayoutBuilderOp = LayoutBuilder -> (GuideID, LayoutBuilder)
+type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
 
-builder :: LayoutBuilder
-builder = B empty empty empty empty
+makeDesign :: LayoutDesign
+makeDesign = D empty empty empty empty
 
-addGuide :: Relationship -> LayoutBuilderOp
+addGuide :: Relationship -> LayoutDesignOp
 addGuide (Absolute pos) = addAbsolute pos
 addGuide (Relative offset gid dep) = addRelative offset gid dep 
 addGuide (Between r1 r2) = addBetween r1 r2
 
-addAbsolute :: Int -> LayoutBuilderOp
-addAbsolute position (B deps elas cons guides) =
-  (G gid, B deps' elas' cons' guides')
+addAbsolute :: Int -> LayoutDesignOp
+addAbsolute position (D deps elas cons guides) =
+  (G gid, D deps' elas' cons' guides')
   where
     (r, _) = dims deps
     gid = r + 1  
@@ -61,9 +62,9 @@ addAbsolute position (B deps elas cons guides) =
     cons' = expandTo (dims elas') cons
     guides' = set (gid, 1) (fromIntegral position) guides
 
-addRelative :: Int -> GuideID -> DependencyType -> LayoutBuilderOp
-addRelative offset (G ref) dep (B deps elas cons guides) =
-  (G gid, B deps' elas' cons' guides')
+addRelative :: Int -> GuideID -> DependencyType -> LayoutDesignOp
+addRelative offset (G ref) dep (D deps elas cons guides) =
+  (G gid, D deps' elas' cons' guides')
   where
     (r, _) = dims deps
     gid = r + 1
@@ -76,9 +77,9 @@ addRelative offset (G ref) dep (B deps elas cons guides) =
     pos = fromIntegral offset + get (ref, 1) guides
     guides' = set (gid, 1) pos guides
 
-addBetween :: (GuideID, Float) -> (GuideID, Float) -> LayoutBuilderOp
-addBetween (G ref1, pct1) (G ref2, pct2) (B deps elas cons guides) =
-  (G gid, B deps' elas' cons' guides')
+addBetween :: (GuideID, Float) -> (GuideID, Float) -> LayoutDesignOp
+addBetween (G ref1, pct1) (G ref2, pct2) (D deps elas cons guides) =
+  (G gid, D deps' elas' cons' guides')
   where
     (r, _) = dims deps
     gid = r + 1
@@ -109,13 +110,12 @@ propagate m =
   then m'
   else propagate m'
 
-construct :: LayoutBuilder -> Layout
-construct (B deps elas cons guides) = L deps elas cons prop guides
+build :: LayoutDesign -> Layout
+build (D deps elas cons guides) = L deps elas cons prop guides
   where prop = elas `mul` propagate deps
 
---TODO think of better name
-thaw :: Layout -> LayoutBuilder
-thaw (L d e c _ g) = B d e c g
+design :: Layout -> LayoutDesign
+design (L d e c _ g) = D d e c g
 
 getGuide :: GuideID -> Layout -> Int
 getGuide (G gid) = floor . get (gid, 1) . guidesVectorOf
@@ -123,15 +123,13 @@ getGuide (G gid) = floor . get (gid, 1) . guidesVectorOf
 getGuides :: [GuideID] -> Layout -> [Int]
 getGuides gs layout = map (`getGuide` layout) gs
 
--- TODO think of a better term than 'adjust'
-
-adjust :: GuideID -> Int -> Layout -> Layout
-adjust (G gid) amt l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
+reactToChange :: GuideID -> Int -> Layout -> Layout
+reactToChange (G gid) amt l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
   where
     changes = matrix (dims g) [((gid, 1), fromIntegral amt)]
 
-adjusts :: [(GuideID, Int)] -> Layout -> Layout
-adjusts pairs l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
+reactToChanges :: [(GuideID, Int)] -> Layout -> Layout
+reactToChanges pairs l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
   where
     convert (G gid, amt) = ((gid, 1), fromIntegral amt)
     changes = matrix (dims g) (map convert pairs)

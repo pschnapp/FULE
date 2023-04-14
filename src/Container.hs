@@ -38,14 +38,14 @@ data Component k
 
 data LayoutOpState
   = LOS
-    { builderOf :: LayoutBuilder
+    { builderOf :: LayoutDesign
     , currentRenderGroupOf :: Int
     }
 
 type LayoutOp k = StateT LayoutOpState (Writer [Component k])
 
-runLayoutOp :: LayoutOp k () -> (LayoutBuilder, [Component k])
-runLayoutOp = toOutput . runWriter . (`execStateT` (LOS builder 0))
+runLayoutOp :: LayoutOp k () -> (LayoutDesign, [Component k])
+runLayoutOp = toOutput . runWriter . (`execStateT` (LOS makeDesign 0))
   where toOutput (LOS builder _, components) = (builder, components)
 
 

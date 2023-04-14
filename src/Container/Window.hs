@@ -22,7 +22,7 @@ window = Window
 
 
 layout :: (Container c k) => Window c -> (Layout, [Component k])
-layout = first construct . runLayoutOp . makeLayoutOp
+layout = first build . runLayoutOp . makeLayoutOp
 
 makeLayoutOp :: (Container c k) => Window c -> LayoutOp k ()
 makeLayoutOp (Window w h c) = do

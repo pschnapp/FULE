@@ -5,7 +5,6 @@ module Container.Centered
  , centered
  ) where
 
-import Control.Monad.Trans.State
 import Data.Proxy
 
 import Container

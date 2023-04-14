@@ -3,8 +3,6 @@ module Container.Grid
  , grid
  ) where
 
-import Control.Monad
-
 import Container
 import Container.Item
 import Internal.Util

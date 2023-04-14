@@ -5,7 +5,6 @@ module Container.Window
  ) where
 
 import Control.Arrow
-import Control.Monad.Trans.State
 
 import Container
 import Layout
@@ -20,6 +19,7 @@ data Window c
 
 window :: Int -> Int -> c -> Window c
 window = Window
+
 
 layout :: (Container c k) => Window c -> (Layout, [Component k])
 layout = first construct . runLayoutOp . makeLayoutOp

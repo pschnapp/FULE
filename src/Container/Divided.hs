@@ -4,8 +4,6 @@ module Container.Divided
  , Sizing(..)
  ) where
 
-import Control.Monad.Trans.State
-
 import Container
 import Internal.Util
 import Layout

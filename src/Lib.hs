@@ -4,6 +4,7 @@ module Lib
  , module Container.Divided
  , module Container.Grid
  , module Container.Item
+ , module Container.Layered
 -- , module Container.Quadrant
  , module Container.Sized
  , module Container.Window
@@ -15,6 +16,7 @@ import Container.Centered
 import Container.Divided
 import Container.Grid
 import Container.Item
+import Container.Layered
 --import Container.Quadrant
 import Container.Sized
 import Container.Window

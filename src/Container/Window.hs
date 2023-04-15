@@ -18,7 +18,7 @@ data Window c
     }
 
 window :: Int -> Int -> c -> Window c
-window = Window
+window width height = Window (max 0 width) (max 0 height)
 
 
 layout :: (Container c k) => Window c -> (Layout, [Component k])

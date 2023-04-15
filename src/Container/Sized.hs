@@ -21,11 +21,11 @@ instance (Container c k) => Container (Sized c) k where
   addToLayout (Sized _ _ c) = addToLayout c
 
 sizedHoriz :: Int -> c -> Sized c
-sizedHoriz w = Sized (Just w) Nothing
+sizedHoriz width = Sized (Just $ max 0 width) Nothing
 
 sizedVert :: Int -> c -> Sized c
-sizedVert h = Sized Nothing (Just h)
+sizedVert height = Sized Nothing (Just $ max 0 height)
 
 sized :: Int -> Int -> c -> Sized c
-sized w h = Sized (Just w) (Just h)
+sized width height = Sized (Just $ max 0 width) (Just $ max 0 height)
 

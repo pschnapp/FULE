@@ -11,8 +11,8 @@ import Layout
 
 data Grid k
   = Grid
-    { rowsOf :: Int
-    , columnsOf :: Int
+    { rowCountOf :: Int
+    , columnCountOf :: Int
     , itemsOf :: [Item k]
     }
 
@@ -45,5 +45,5 @@ percents :: Int -> [Float]
 percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]
 
 grid :: Int -> Int -> [Item k] -> Grid k
-grid = Grid
+grid rows cols = Grid (max 0 rows) (max 0 cols)
 

@@ -1,6 +1,8 @@
 module Container.Divided
  ( Divided
- , Dynamics(..)
+ , Dynamics
+ , dynamic
+ , static
  , Sizing
  , sizedTop
  , sizedLeft
@@ -26,6 +28,12 @@ data Dynamics b
 barSizeFor :: Dynamics b -> Maybe Int
 barSizeFor (Dynamic _ s) = Just s
 barSizeFor Static = Nothing
+
+dynamic :: (GuideID -> b) -> Int -> Dynamics b
+dynamic barGen size = Dynamic barGen (max 0 size)
+
+static :: Dynamics b
+static = Static
 
 
 data Divided s b u
@@ -129,14 +137,14 @@ makeDivided divided bounds renderGroup config = do
 
 
 sizedTop :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedTop = Divided SizedTop
+sizedTop = Divided SizedTop . max 0
 
 sizedLeft :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedLeft = Divided SizedLeft
+sizedLeft = Divided SizedLeft . max 0
 
 sizedRight :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedRight = Divided SizedRight
+sizedRight = Divided SizedRight . max 0
 
 sizedBottom :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedBottom = Divided SizedBottom
+sizedBottom = Divided SizedBottom . max 0
 

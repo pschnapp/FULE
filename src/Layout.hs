@@ -101,7 +101,7 @@ data Layout
     }
 
 instance Show Layout where
-  show l = concat [show (propagatedMatrixOf l), "\n\n", show (guidesVectorOf l)]
+  show l = concat ["\n", show (propagatedMatrixOf l), "\n\n", show (guidesVectorOf l), "\n"]
 
 propagate :: (Num a) => Matrix a -> Matrix a
 propagate m =

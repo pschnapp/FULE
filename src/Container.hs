@@ -34,6 +34,7 @@ data Component k
     , componentOf :: k
     , renderGroupOf :: RenderGroup
     }
+  deriving (Show)
 
 
 data LayoutOpState

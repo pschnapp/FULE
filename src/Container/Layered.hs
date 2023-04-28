@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Container.Layered
  ( Layered
  , layered
@@ -18,9 +21,9 @@ newtype Layered k = Layered [Item k]
 instance Container (Layered k) k where
   requiredWidth (Layered is) p = getMaxSize $ map (`requiredWidth` p) is
   requiredHeight (Layered is) p = getMaxSize $ map (`requiredHeight` p) is
-  addToLayout (Layered is) bounds renderGroup = do
+  addToLayout (Layered is) proxy bounds renderGroup = do
     renderGroup' <- Just <$> maybe nextRenderGroup pure renderGroup
-    mapM_ (\i -> addToLayout i bounds renderGroup') is
+    mapM_ (\i -> addToLayout i proxy bounds renderGroup') is
 
 layered :: [Item k] -> Layered k
 layered = Layered

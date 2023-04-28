@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Container.Divided
  ( Divided
  , Dynamics
@@ -9,6 +12,8 @@ module Container.Divided
  , sizedRight
  , sizedBottom
  ) where
+
+import Data.Proxy
 
 import Container
 import Internal.Util
@@ -46,42 +51,42 @@ data Divided s b u
     }
 
 instance (Container s b, Container u b) => Container (Divided s b u) b where
-  requiredWidth divided p =
-    let sizedWidth = requiredWidth (sizedOf divided) p
+  requiredWidth divided proxy =
+    let sizedWidth = requiredWidth (sizedOf divided) proxy
     in case sizingOf divided of
       SizedLeft  -> makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       SizedRight -> makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       _          -> sizedWidth
-  requiredHeight divided p =
-    let sizedHeight = requiredHeight (sizedOf divided) p
+  requiredHeight divided proxy =
+    let sizedHeight = requiredHeight (sizedOf divided) proxy
     in case sizingOf divided of
       SizedTop    -> makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       SizedBottom -> makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       _           -> sizedHeight
-  addToLayout divided bounds renderGroup =
+  addToLayout divided proxy bounds renderGroup =
     case sizingOf divided of
-      SizedTop -> makeDivided divided bounds renderGroup
+      SizedTop -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { topOf = g }
         , setSizedInnerOf = \g b -> b { bottomOf = g }
         , setSizedOuterOf = topOf
         , multiplierOf = 1
         }
-      SizedLeft -> makeDivided divided bounds renderGroup
+      SizedLeft -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { leftOf = g }
         , setSizedInnerOf = \g b -> b { rightOf = g }
         , setSizedOuterOf = leftOf
         , multiplierOf = 1
         }
-      SizedRight -> makeDivided divided bounds renderGroup
+      SizedRight -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { rightOf = g }
         , setSizedInnerOf = \g b -> b { leftOf = g }
         , setSizedOuterOf = rightOf
         , multiplierOf = -1
         }
-      SizedBottom -> makeDivided divided bounds renderGroup
+      SizedBottom -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { bottomOf = g }
         , setSizedInnerOf = \g b -> b { topOf = g }
@@ -103,11 +108,11 @@ data DivisionConfig
 
 makeDivided
  :: (Container s b, Container u b)
- => Divided s b u -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b ()
-makeDivided divided bounds renderGroup config = do
+ => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b ()
+makeDivided divided proxy bounds renderGroup config = do
   -- sized
   sizedInner <- addGuideToLayout $ Relative (m*(size-1)) (getSizedOuter bounds) Asymmetric
-  addToLayout sized (setSizedInner sizedInner bounds) renderGroup
+  addToLayout sized proxy (setSizedInner sizedInner bounds) renderGroup
   -- bar
   ref <- case dynamics of
     Dynamic barGen barSize -> do
@@ -120,7 +125,7 @@ makeDivided divided bounds renderGroup config = do
     Static -> return sizedInner
   -- unconstrained
   unconstrainedInner <- addGuideToLayout $ Relative m ref Symmetric
-  addToLayout unconstrained (setUnconInner unconstrainedInner bounds) renderGroup
+  addToLayout unconstrained proxy (setUnconInner unconstrainedInner bounds) renderGroup
   where
     Divided
       { sizeOf = size

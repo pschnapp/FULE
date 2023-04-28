@@ -1,3 +1,7 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Container
  ( Container(..)
  , Bounds(..)
@@ -72,10 +76,10 @@ class Container c k where
   -- sadly the `Proxy` has to be used for the heterogenous collections to work
   requiredWidth :: c -> Proxy k -> Maybe Int
   requiredHeight :: c -> Proxy k -> Maybe Int
-  addToLayout :: c -> Bounds -> RenderGroup -> LayoutOp k ()
+  addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k ()
 
 instance Container k k where
   requiredWidth _ _ = Nothing
   requiredHeight _ _ = Nothing
-  addToLayout k bounds renderGroup = addComponent $ Component bounds k renderGroup
+  addToLayout k _ bounds renderGroup = addComponent $ Component bounds k renderGroup
 

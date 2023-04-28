@@ -5,6 +5,7 @@ module Container.Window
  ) where
 
 import Control.Arrow
+import Data.Proxy
 
 import Container
 import Layout
@@ -34,6 +35,7 @@ makeLayoutOp (Window w h gen c) = do
   right <- addGuideToLayout $ Absolute (w - 1)
   bottom <- addGuideToLayout $ Absolute (h - 1)
   let bounds = Bounds top left right bottom
-  addToLayout (gen right bottom) bounds Nothing
-  addToLayout c bounds Nothing
+  let proxy = Proxy :: Proxy k
+  addToLayout (gen right bottom) proxy bounds Nothing
+  addToLayout c proxy bounds Nothing
 

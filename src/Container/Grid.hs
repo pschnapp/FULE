@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Container.Grid
  ( Grid
  , grid
@@ -21,7 +24,7 @@ instance Container (Grid k) k where
     fmap (* c) . getMaxSize $ map (`requiredWidth` p) is
   requiredHeight (Grid r _ is) p =
     fmap (* r) . getMaxSize $ map (`requiredHeight` p) is
-  addToLayout (Grid r c is) bounds renderGroup = do
+  addToLayout (Grid r c is) proxy bounds renderGroup = do
     let addBetween f1 f2 p =
           addGuideToLayout $ Between (f1 bounds, p) (f2 bounds, 1-p)
     elasHorizs <- mapM (addBetween topOf bottomOf) (percents r)
@@ -39,7 +42,7 @@ instance Container (Grid k) k where
           | (t, b) <- zip tops bottoms
           , (l, r) <- zip lefts rights
           ]
-    mapM_ (\(i, b) -> addToLayout i b renderGroup) (zip is boundsForItems)
+    mapM_ (\(i, b) -> addToLayout i proxy b renderGroup) (zip is boundsForItems)
 
 percents :: Int -> [Float]
 percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]

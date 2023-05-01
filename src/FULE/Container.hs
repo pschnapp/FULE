@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container
+module FULE.Container
  ( Container(..)
  , Bounds(..)
  , RenderGroup
@@ -18,7 +18,7 @@ import Control.Monad.Trans.State
 import Control.Monad.Writer
 import Data.Proxy
 
-import Layout
+import FULE.Layout
 
 
 data Bounds

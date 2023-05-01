@@ -1,4 +1,4 @@
-module Internal.Util where
+module FULE.Internal.Util where
 
 import Data.Maybe
 

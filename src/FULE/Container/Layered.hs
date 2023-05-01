@@ -1,16 +1,16 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Layered
+module FULE.Container.Layered
  ( Layered
  , layered
  ) where
 
 import Data.Maybe
 
-import Container
-import Container.Item
-import Internal.Util
+import FULE.Container
+import FULE.Container.Item
+import FULE.Internal.Util
 
 
 newtype Layered k = Layered [Item k]

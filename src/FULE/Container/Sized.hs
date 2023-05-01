@@ -1,14 +1,14 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Sized
+module FULE.Container.Sized
  ( Sized
  , sizedHoriz
  , sizedVert
  , sized
  ) where
 
-import Container
+import FULE.Container
 
 
 data Sized c

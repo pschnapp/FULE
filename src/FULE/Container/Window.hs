@@ -1,4 +1,4 @@
-module Container.Window
+module FULE.Container.Window
  ( Window
  , window
  , layout
@@ -7,8 +7,8 @@ module Container.Window
 import Control.Arrow
 import Data.Proxy
 
-import Container
-import Layout
+import FULE.Container
+import FULE.Layout
 
 
 type ControlGen k = GuideID -> GuideID -> k

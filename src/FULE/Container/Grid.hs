@@ -1,15 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Grid
+module FULE.Container.Grid
  ( Grid
  , grid
  ) where
 
-import Container
-import Container.Item
-import Internal.Util
-import Layout
+import FULE.Container
+import FULE.Container.Item
+import FULE.Internal.Util
+import FULE.Layout
 
 
 data Grid k

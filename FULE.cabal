@@ -25,18 +25,18 @@ source-repository head
 
 library
   exposed-modules:
-      Container
-      Container.Centered
-      Container.Divided
-      Container.Grid
-      Container.Item
-      Container.Layered
-      Container.Sized
-      Container.Window
-      Internal.Sparse
-      Internal.Util
-      Layout
-      Lib
+      FULE
+      FULE.Container
+      FULE.Container.Centered
+      FULE.Container.Divided
+      FULE.Container.Grid
+      FULE.Container.Item
+      FULE.Container.Layered
+      FULE.Container.Sized
+      FULE.Container.Window
+      FULE.Internal.Sparse
+      FULE.Internal.Util
+      FULE.Layout
   other-modules:
       Paths_FULE
   hs-source-dirs:

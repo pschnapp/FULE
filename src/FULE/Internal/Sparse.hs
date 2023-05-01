@@ -1,4 +1,4 @@
-module Internal.Sparse
+module FULE.Internal.Sparse
  ( Matrix
  , Pos
  , empty

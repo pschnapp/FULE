@@ -1,4 +1,4 @@
-module Layout
+module FULE.Layout
  ( GuideID
  , DependencyType(..)
  , Relationship(..)
@@ -14,7 +14,7 @@ module Layout
  , reactToChanges
  ) where
 
-import Internal.Sparse
+import FULE.Internal.Sparse
 
 
 newtype GuideID = G Int

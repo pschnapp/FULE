@@ -2,12 +2,12 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Item
+module FULE.Container.Item
  ( Item
  , item
  ) where
 
-import Container
+import FULE.Container
 
 
 -- a type for anything containing heterogenous items

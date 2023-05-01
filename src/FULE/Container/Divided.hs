@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Divided
+module FULE.Container.Divided
  ( Divided
  , Dynamics
  , dynamic
@@ -15,9 +15,9 @@ module Container.Divided
 
 import Data.Proxy
 
-import Container
-import Internal.Util
-import Layout
+import FULE.Container
+import FULE.Internal.Util
+import FULE.Layout
 
 
 data Sizing = SizedTop | SizedLeft | SizedRight | SizedBottom

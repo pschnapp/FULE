@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Container.Centered
+module FULE.Container.Centered
  ( Centered
  , centeredHoriz
  , centeredVert
@@ -10,8 +10,8 @@ module Container.Centered
 
 import Data.Proxy
 
-import Container
-import Layout
+import FULE.Container
+import FULE.Layout
 
 
 data Centering = Both | Horizontal | Vertical

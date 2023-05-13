@@ -1,5 +1,6 @@
 module FULE.Container.Window
  ( Window
+ , WindowControlGen
  , window
  , layout
  ) where
@@ -11,17 +12,17 @@ import FULE.Container
 import FULE.Layout
 
 
-type ControlGen k = GuideID -> GuideID -> k
+type WindowControlGen k = (GuideID, Int) -> (GuideID, Int) -> k
 
 data Window c k
   = Window
     { widthOf :: Int
     , heightOf :: Int
-    , controlGenOf :: ControlGen k
+    , controlGenOf :: WindowControlGen k
     , contentsOf :: c
     }
 
-window :: Int -> Int -> ControlGen k -> c -> Window c k
+window :: Int -> Int -> WindowControlGen k -> c -> Window c k
 window width height gen = Window (max 0 width) (max 0 height) gen
 
 
@@ -36,6 +37,6 @@ makeLayoutOp (Window w h gen c) = do
   bottom <- addGuideToLayout $ Absolute (h - 1)
   let bounds = Bounds top left right bottom
   let proxy = Proxy :: Proxy k
-  addToLayout (gen right bottom) proxy bounds Nothing
+  addToLayout (gen (right, w) (bottom, h)) proxy bounds Nothing
   addToLayout c proxy bounds Nothing
 

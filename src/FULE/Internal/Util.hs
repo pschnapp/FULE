@@ -3,7 +3,7 @@ module FULE.Internal.Util where
 import Data.Maybe
 
 
-collapseTo :: ([a] -> a) -> [Maybe a] -> Maybe a
+collapseTo :: ([a] -> b) -> [Maybe a] -> Maybe b
 collapseTo f ms =
   case catMaybes ms of
     [] -> Nothing

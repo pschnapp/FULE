@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -7,6 +8,7 @@ module FULE.Container
  , Bounds(..)
  , RenderGroup
  , Component(..)
+ , HasBoundingGuides(..)
  , LayoutOp
  , runLayoutOp
  , addGuideToLayout
@@ -30,7 +32,9 @@ data Bounds
     }
   deriving (Show)
 
+
 type RenderGroup = Maybe Int
+
 
 data Component k
   = Component
@@ -38,7 +42,19 @@ data Component k
     , componentOf :: k
     , renderGroupOf :: RenderGroup
     }
-  deriving (Show)
+  deriving (Functor, Show)
+
+
+class HasBoundingGuides a where
+  boundingGuidesFor :: Layout -> a -> [Int]
+
+instance HasBoundingGuides Bounds where
+  boundingGuidesFor layout (Bounds t l r b) =
+    getGuides [t, l, r, b] layout
+
+instance HasBoundingGuides (Component k) where
+  boundingGuidesFor layout component =
+    boundingGuidesFor layout (boundsOf component)
 
 
 data LayoutOpState

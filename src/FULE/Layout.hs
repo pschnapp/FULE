@@ -112,7 +112,7 @@ propagate m =
 
 build :: LayoutDesign -> Layout
 build (D deps elas cons guides) = L deps elas cons prop guides
-  where prop = elas `mul` propagate deps
+  where prop = propagate deps `mul` elas
 
 design :: Layout -> LayoutDesign
 design (L d e c _ g) = D d e c g

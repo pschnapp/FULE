@@ -29,12 +29,8 @@ instance Container (Grid k) k where
           addGuideToLayout $ Between (f1 bounds, p) (f2 bounds, 1-p)
     elasHorizs <- mapM (addBetween topOf bottomOf) (percents r)
     elasVerts <- mapM (addBetween leftOf rightOf) (percents c)
-    let addSymNeighbor g =
-          addGuideToLayout $ Relative 1 g Symmetric
-    relHorizs <- mapM addSymNeighbor elasHorizs
-    relVerts <- mapM addSymNeighbor elasVerts
-    let tops = topOf bounds : relHorizs
-    let lefts = leftOf bounds : relVerts
+    let tops = topOf bounds : elasHorizs
+    let lefts = leftOf bounds : elasVerts
     let rights = elasVerts ++ [rightOf bounds]
     let bottoms = elasHorizs ++ [bottomOf bounds]
     let boundsForItems =

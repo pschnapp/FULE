@@ -25,7 +25,7 @@ data Window c k
     }
 
 window :: Int -> Int -> WindowControlGen k -> c -> Window c k
-window width height gen = Window (max 0 width) (max 0 height) gen
+window width height = Window (max 0 width) (max 0 height)
 
 
 layout :: (Container c k) => Window c k -> (Layout, [Component k])
@@ -38,8 +38,8 @@ makeLayoutOp :: (Container c k, Monad m) => Window c k -> LayoutOp k m ()
 makeLayoutOp (Window w h gen c) = do
   top <- addGuideToLayout $ Absolute 0
   left <- addGuideToLayout $ Absolute 0
-  right <- addGuideToLayout $ Absolute (w - 1)
-  bottom <- addGuideToLayout $ Absolute (h - 1)
+  right <- addGuideToLayout $ Absolute w
+  bottom <- addGuideToLayout $ Absolute h
   let bounds = Bounds top left right bottom
   let proxy = Proxy :: Proxy k
   addToLayout (gen (right, w) (bottom, h)) proxy bounds Nothing

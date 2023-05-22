@@ -111,20 +111,18 @@ makeDivided
  => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b m ()
 makeDivided divided proxy bounds renderGroup config = do
   -- sized
-  sizedInner <- addGuideToLayout $ Relative (m*(size-1)) (getSizedOuter bounds) Asymmetric
+  sizedInner <- addGuideToLayout $ Relative (m * size) (getSizedOuter bounds) Asymmetric
   addToLayout sized proxy (setSizedInner sizedInner bounds) renderGroup
   -- bar
-  ref <- case dynamics of
+  unconstrainedInner <- case dynamics of
     Dynamic barGen barSize -> do
-      barSized <- addGuideToLayout $ Relative m sizedInner Symmetric
-      barUncon <- addGuideToLayout $ Relative (m*(barSize-1)) barSized Symmetric
+      barUncon <- addGuideToLayout $ Relative (m * barSize) sizedInner Symmetric
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
-      let barBounds = setSizedInner barUncon . setUnconInner barSized $ bounds
-      addComponent $ Component barBounds (barGen barSized) renderGroup
+      let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
+      addComponent $ Component barBounds (barGen sizedInner) renderGroup
       return barUncon
     Static -> return sizedInner
   -- unconstrained
-  unconstrainedInner <- addGuideToLayout $ Relative m ref Symmetric
   addToLayout unconstrained proxy (setUnconInner unconstrainedInner bounds) renderGroup
   where
     Divided

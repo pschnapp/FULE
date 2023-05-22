@@ -9,6 +9,7 @@ module FULE.Container
  , RenderGroup
  , Component(..)
  , HasBoundingGuides(..)
+ , boundingGuidesInCSSOrderFor
  , LayoutOp
  , runLayoutOp
  , addGuideToLayout
@@ -55,6 +56,11 @@ instance HasBoundingGuides Bounds where
 instance HasBoundingGuides (Component k) where
   boundingGuidesFor layout component =
     boundingGuidesFor layout (boundsOf component)
+
+boundingGuidesInCSSOrderFor :: (HasBoundingGuides b) => Layout -> b -> [Int]
+boundingGuidesInCSSOrderFor layout component =
+  let [t, l, r, b] = boundingGuidesFor layout component
+  in [t, r, b, l]
 
 
 data LayoutOpState

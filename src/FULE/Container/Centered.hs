@@ -42,6 +42,7 @@ instance (Container c k) => Container (Centered c) k where
 
 -- NOTE `horiz` and `vert` here refer to the centering _guides_ --
 -- the vertical centering guide is for centering horizontally and vice-versa
+
 makeCenteringHorizontallyGuides
   :: (Monad m)
   => Int -> Bounds -> LayoutOp k m (GuideID, GuideID)

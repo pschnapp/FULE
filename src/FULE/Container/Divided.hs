@@ -51,18 +51,18 @@ data Divided s b u
     }
 
 instance (Container s b, Container u b) => Container (Divided s b u) b where
-  requiredWidth divided proxy =
-    let sizedWidth = requiredWidth (sizedOf divided) proxy
-    in case sizingOf divided of
-      SizedLeft  -> makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
-      SizedRight -> makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
-      _          -> sizedWidth
-  requiredHeight divided proxy =
-    let sizedHeight = requiredHeight (sizedOf divided) proxy
-    in case sizingOf divided of
-      SizedTop    -> makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
-      SizedBottom -> makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
-      _           -> sizedHeight
+  requiredWidth divided proxy = do
+    sizedWidth <- requiredWidth (sizedOf divided) proxy
+    case sizingOf divided of
+      SizedLeft  -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
+      SizedRight -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
+      _          -> return sizedWidth
+  requiredHeight divided proxy = do
+    sizedHeight <- requiredHeight (sizedOf divided) proxy
+    case sizingOf divided of
+      SizedTop    -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
+      SizedBottom -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
+      _           -> return sizedHeight
   addToLayout divided proxy bounds renderGroup =
     case sizingOf divided of
       SizedTop -> makeDivided divided proxy bounds renderGroup
@@ -107,8 +107,8 @@ data DivisionConfig
     }
 
 makeDivided
- :: (Container s b, Container u b)
- => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b ()
+ :: (Container s b, Container u b, Monad m)
+ => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b m ()
 makeDivided divided proxy bounds renderGroup config = do
   -- sized
   sizedInner <- addGuideToLayout $ Relative (m*(size-1)) (getSizedOuter bounds) Asymmetric

@@ -19,8 +19,8 @@ data Sized c
     }
 
 instance (Container c k) => Container (Sized c) k where
-  requiredWidth sized _ = widthOf sized
-  requiredHeight sized _ = heightOf sized
+  requiredWidth sized _ = return (widthOf sized)
+  requiredHeight sized _ = return (heightOf sized)
   addToLayout (Sized _ _ c) = addToLayout c
 
 sizedHoriz :: Int -> c -> Sized c

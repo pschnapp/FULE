@@ -3,9 +3,11 @@ module FULE.Container.Window
  , WindowControlGen
  , window
  , layout
+ , layoutM
  ) where
 
 import Control.Arrow
+import Data.Functor.Identity
 import Data.Proxy
 
 import FULE.Container
@@ -27,9 +29,12 @@ window width height gen = Window (max 0 width) (max 0 height) gen
 
 
 layout :: (Container c k) => Window c k -> (Layout, [Component k])
-layout = first build . runLayoutOp . makeLayoutOp
+layout = first build . runIdentity . runLayoutOp . makeLayoutOp
 
-makeLayoutOp :: (Container c k) => Window c k -> LayoutOp k ()
+layoutM :: (Container c k, Monad m) => Window c k -> m (Layout, [Component k])
+layoutM = (first build <$>) . runLayoutOp . makeLayoutOp
+
+makeLayoutOp :: (Container c k, Monad m) => Window c k -> LayoutOp k m ()
 makeLayoutOp (Window w h gen c) = do
   top <- addGuideToLayout $ Absolute 0
   left <- addGuideToLayout $ Absolute 0

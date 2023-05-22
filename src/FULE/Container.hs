@@ -63,39 +63,39 @@ data LayoutOpState
     , currentRenderGroupOf :: Int
     }
 
-type LayoutOp k = StateT LayoutOpState (Writer [Component k])
+type LayoutOp k m = StateT LayoutOpState (WriterT [Component k] m)
 
-runLayoutOp :: LayoutOp k () -> (LayoutDesign, [Component k])
-runLayoutOp = toOutput . runWriter . (`execStateT` LOS makeDesign 0)
+runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [Component k])
+runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
 
 
-addGuideToLayout :: Relationship -> LayoutOp k GuideID
+addGuideToLayout :: (Monad m) => Relationship -> LayoutOp k m GuideID
 addGuideToLayout r = do
   state <- get
   let (guideID, builder) = addGuide r (builderOf state)
   put state { builderOf = builder }
   return guideID
 
-nextRenderGroup :: LayoutOp k Int
+nextRenderGroup :: (Monad m) => LayoutOp k m Int
 nextRenderGroup = do
   state <- get
   let renderGroup = currentRenderGroupOf state
   put state { currentRenderGroupOf = renderGroup + 1 }
   return renderGroup
 
-addComponent :: MonadWriter [a] m => a -> m ()
+addComponent :: (MonadWriter [a] m) => a -> m ()
 addComponent p = tell [p]
 
 
 class Container c k where
   -- sadly the `Proxy` has to be used for the heterogenous collections to work
-  requiredWidth :: c -> Proxy k -> Maybe Int
-  requiredHeight :: c -> Proxy k -> Maybe Int
-  addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k ()
+  requiredWidth :: (Monad m) => c -> Proxy k -> m (Maybe Int)
+  requiredHeight :: (Monad m) => c -> Proxy k -> m (Maybe Int)
+  addToLayout :: (Monad m) => c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()
 
 instance Container k k where
-  requiredWidth _ _ = Nothing
-  requiredHeight _ _ = Nothing
+  requiredWidth _ _ = return Nothing
+  requiredHeight _ _ = return Nothing
   addToLayout k _ bounds renderGroup = addComponent $ Component bounds k renderGroup
 

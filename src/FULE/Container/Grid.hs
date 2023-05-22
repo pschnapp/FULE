@@ -21,9 +21,9 @@ data Grid k
 
 instance Container (Grid k) k where
   requiredWidth (Grid _ c is) p =
-    fmap (* c) . getMaxSize $ map (`requiredWidth` p) is
+    fmap (* c) . getMaxSize <$> mapM (`requiredWidth` p) is
   requiredHeight (Grid r _ is) p =
-    fmap (* r) . getMaxSize $ map (`requiredHeight` p) is
+    fmap (* r) . getMaxSize <$> mapM (`requiredHeight` p) is
   addToLayout (Grid r c is) proxy bounds renderGroup = do
     let addBetween f1 f2 p =
           addGuideToLayout $ Between (f1 bounds, p) (f2 bounds, 1-p)

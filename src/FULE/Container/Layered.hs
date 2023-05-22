@@ -19,8 +19,8 @@ newtype Layered k = Layered [Item k]
 --  - render order
 --  - input censoring
 instance Container (Layered k) k where
-  requiredWidth (Layered is) p = getMaxSize $ map (`requiredWidth` p) is
-  requiredHeight (Layered is) p = getMaxSize $ map (`requiredHeight` p) is
+  requiredWidth (Layered is) p = getMaxSize <$> mapM (`requiredWidth` p) is
+  requiredHeight (Layered is) p = getMaxSize <$> mapM (`requiredHeight` p) is
   addToLayout (Layered is) proxy bounds renderGroup = do
     renderGroup' <- Just <$> maybe nextRenderGroup pure renderGroup
     mapM_ (\i -> addToLayout i proxy bounds renderGroup') is

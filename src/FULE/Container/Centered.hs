@@ -21,8 +21,10 @@ data Centered c = Centered Centering c
 instance (Container c k) => Container (Centered c) k where
   requiredWidth (Centered _ c) = requiredWidth c
   requiredHeight (Centered _ c) = requiredHeight c
-  addToLayout (Centered centering c) proxy bounds renderGroup =
-    case (centering, requiredWidth c proxy, requiredHeight c proxy) of
+  addToLayout (Centered centering c) proxy bounds renderGroup = do
+    reqWidth <- requiredWidth c proxy
+    reqHeight <- requiredHeight c proxy
+    case (centering, reqWidth, reqHeight) of
       (Both, Just w, Just h) -> do
         (top, bottom) <- makeCenteringVerticallyGuides h bounds
         (left, right) <- makeCenteringHorizontallyGuides w bounds
@@ -40,14 +42,18 @@ instance (Container c k) => Container (Centered c) k where
 
 -- NOTE `horiz` and `vert` here refer to the centering _guides_ --
 -- the vertical centering guide is for centering horizontally and vice-versa
-makeCenteringHorizontallyGuides :: Int -> Bounds -> LayoutOp k (GuideID, GuideID)
+makeCenteringHorizontallyGuides
+  :: (Monad m)
+  => Int -> Bounds -> LayoutOp k m (GuideID, GuideID)
 makeCenteringHorizontallyGuides w bounds = do
   vert <- addGuideToLayout $ Between (leftOf bounds, 0.5) (rightOf bounds, 0.5)
   left <- addGuideToLayout $ Relative (-1 * (w `div` 2)) vert Asymmetric
   right <- addGuideToLayout $ Relative w left Symmetric
   return (left, right)
 
-makeCenteringVerticallyGuides :: Int -> Bounds -> LayoutOp k (GuideID, GuideID)
+makeCenteringVerticallyGuides
+  :: (Monad m)
+  => Int -> Bounds -> LayoutOp k m (GuideID, GuideID)
 makeCenteringVerticallyGuides h bounds = do
   horiz <- addGuideToLayout $ Between (topOf bounds, 0.5) (bottomOf bounds, 0.5)
   top <- addGuideToLayout $ Relative (-1 * (h `div` 2)) horiz Asymmetric

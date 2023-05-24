@@ -94,14 +94,14 @@ addComponent :: (MonadWriter [a] m) => a -> m ()
 addComponent p = tell [p]
 
 
-class Container c k where
+class (Monad m) => Container c k m where
   -- sadly the `Proxy` has to be used for the heterogenous collections to work
-  requiredWidth :: (Monad m) => c -> Proxy k -> m (Maybe Int)
-  requiredHeight :: (Monad m) => c -> Proxy k -> m (Maybe Int)
-  addToLayout :: (Monad m) => c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()
-
-instance Container k k where
+  requiredWidth :: c -> Proxy k -> m (Maybe Int)
   requiredWidth _ _ = return Nothing
+  requiredHeight :: c -> Proxy k -> m (Maybe Int)
   requiredHeight _ _ = return Nothing
+  addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()
+
+instance (Monad m) => Container k k m where
   addToLayout k _ bounds renderGroup = addComponent $ Component bounds k renderGroup
 

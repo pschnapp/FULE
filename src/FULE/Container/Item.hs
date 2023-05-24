@@ -3,22 +3,27 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module FULE.Container.Item
- ( Item
+ ( ItemM
+ , Item
  , item
  ) where
+
+import Data.Functor.Identity
 
 import FULE.Container
 
 
 -- a type for anything containing heterogenous items
 -- https://wiki.haskell.org/Heterogenous_collections
-data Item k = forall c . Container c k => Item c
+data ItemM m k = forall c . Container c k m => Item c
 
-instance Container (Item k) k where
+type Item = ItemM Identity
+
+instance (Monad m) => Container (ItemM m k) k m where
   requiredWidth (Item c) = requiredWidth c
   requiredHeight (Item c) = requiredHeight c
   addToLayout (Item c) = addToLayout c
 
-item :: (Container c k) => c -> Item k
+item :: (Container c k m) => c -> ItemM m k
 item = Item
 

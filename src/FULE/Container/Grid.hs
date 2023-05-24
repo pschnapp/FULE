@@ -2,9 +2,12 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module FULE.Container.Grid
- ( Grid
+ ( GridM
+ , Grid
  , grid
  ) where
+
+import Data.Functor.Identity
 
 import FULE.Container
 import FULE.Container.Item
@@ -12,14 +15,16 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
-data Grid k
+data GridM m k
   = Grid
     { rowCountOf :: Int
     , columnCountOf :: Int
-    , itemsOf :: [Item k]
+    , itemsOf :: [ItemM m k]
     }
 
-instance Container (Grid k) k where
+type Grid = GridM Identity
+
+instance (Monad m) => Container (GridM m k) k m where
   requiredWidth (Grid _ c is) p =
     fmap (* c) . getMaxSize <$> mapM (`requiredWidth` p) is
   requiredHeight (Grid r _ is) p =
@@ -43,6 +48,6 @@ instance Container (Grid k) k where
 percents :: Int -> [Float]
 percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]
 
-grid :: Int -> Int -> [Item k] -> Grid k
+grid :: Int -> Int -> [ItemM m k] -> GridM m k
 grid rows cols = Grid (max 0 rows) (max 0 cols)
 

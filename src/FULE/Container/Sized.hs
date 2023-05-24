@@ -18,7 +18,7 @@ data Sized c
     , contentsOf :: c
     }
 
-instance (Container c k) => Container (Sized c) k where
+instance (Container c k m) => Container (Sized c) k m where
   requiredWidth sized _ = return (widthOf sized)
   requiredHeight sized _ = return (heightOf sized)
   addToLayout (Sized _ _ c) = addToLayout c

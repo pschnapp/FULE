@@ -50,7 +50,7 @@ data Divided s b u
     , unconstrainedOf :: u
     }
 
-instance (Container s b, Container u b) => Container (Divided s b u) b where
+instance (Container s b m, Container u b m) => Container (Divided s b u) b m where
   requiredWidth divided proxy = do
     sizedWidth <- requiredWidth (sizedOf divided) proxy
     case sizingOf divided of
@@ -107,7 +107,7 @@ data DivisionConfig
     }
 
 makeDivided
- :: (Container s b, Container u b, Monad m)
+ :: (Container s b m, Container u b m)
  => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b m ()
 makeDivided divided proxy bounds renderGroup config = do
   -- sized

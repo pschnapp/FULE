@@ -1,5 +1,6 @@
 module FULE
- ( module FULE.Container
+ ( module FULE.Component
+ , module FULE.Container
  , module FULE.Container.Centered
  , module FULE.Container.Divided
  , module FULE.Container.Grid
@@ -10,6 +11,7 @@ module FULE
  , module FULE.Layout
  ) where
 
+import FULE.Component
 import FULE.Container
 import FULE.Container.Centered
 import FULE.Container.Divided

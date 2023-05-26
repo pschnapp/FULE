@@ -9,6 +9,7 @@ module FULE.Container.Grid
 
 import Data.Functor.Identity
 
+import FULE.Component
 import FULE.Container
 import FULE.Container.Item
 import FULE.Internal.Util
@@ -25,10 +26,8 @@ data GridM m k
 type Grid = GridM Identity
 
 instance (Monad m) => Container (GridM m k) k m where
-  requiredWidth (Grid _ c is) p =
-    fmap (* c) . getMaxSize <$> mapM (`requiredWidth` p) is
-  requiredHeight (Grid r _ is) p =
-    fmap (* r) . getMaxSize <$> mapM (`requiredHeight` p) is
+  minWidth (Grid _ c is) p = fmap (* c) . getMaxSize <$> mapM (`minWidth` p) is
+  minHeight (Grid r _ is) p = fmap (* r) . getMaxSize <$> mapM (`minHeight` p) is
   addToLayout (Grid r c is) proxy bounds renderGroup = do
     let addBetween f1 f2 p =
           addGuideToLayout $ Between (f1 bounds, p) (f2 bounds, 1-p)

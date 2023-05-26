@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       FULE
+      FULE.Component
       FULE.Container
       FULE.Container.Centered
       FULE.Container.Divided

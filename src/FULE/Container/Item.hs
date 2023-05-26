@@ -20,8 +20,8 @@ data ItemM m k = forall c . Container c k m => Item c
 type Item = ItemM Identity
 
 instance (Monad m) => Container (ItemM m k) k m where
-  requiredWidth (Item c) = requiredWidth c
-  requiredHeight (Item c) = requiredHeight c
+  minWidth (Item c) = minWidth c
+  minHeight (Item c) = minHeight c
   addToLayout (Item c) = addToLayout c
 
 item :: (Container c k m) => c -> ItemM m k

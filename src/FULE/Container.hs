@@ -1,15 +1,10 @@
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MonoLocalBinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module FULE.Container
  ( Container(..)
- , Bounds(..)
- , RenderGroup
- , Component(..)
- , HasBoundingGuides(..)
- , boundingGuidesInCSSOrderFor
  , LayoutOp
  , runLayoutOp
  , addGuideToLayout
@@ -21,46 +16,8 @@ import Control.Monad.Trans.State
 import Control.Monad.Writer
 import Data.Proxy
 
+import FULE.Component
 import FULE.Layout
-
-
-data Bounds
-  = Bounds
-    { topOf :: GuideID
-    , leftOf :: GuideID
-    , rightOf :: GuideID
-    , bottomOf :: GuideID
-    }
-  deriving (Show)
-
-
-type RenderGroup = Maybe Int
-
-
-data Component k
-  = Component
-    { boundsOf :: Bounds
-    , componentOf :: k
-    , renderGroupOf :: RenderGroup
-    }
-  deriving (Functor, Show)
-
-
-class HasBoundingGuides a where
-  boundingGuidesFor :: Layout -> a -> [Int]
-
-instance HasBoundingGuides Bounds where
-  boundingGuidesFor layout (Bounds t l r b) =
-    getGuides [t, l, r, b] layout
-
-instance HasBoundingGuides (Component k) where
-  boundingGuidesFor layout component =
-    boundingGuidesFor layout (boundsOf component)
-
-boundingGuidesInCSSOrderFor :: (HasBoundingGuides b) => Layout -> b -> [Int]
-boundingGuidesInCSSOrderFor layout component =
-  let [t, l, r, b] = boundingGuidesFor layout component
-  in [t, r, b, l]
 
 
 data LayoutOpState
@@ -69,12 +26,11 @@ data LayoutOpState
     , currentRenderGroupOf :: Int
     }
 
-type LayoutOp k m = StateT LayoutOpState (WriterT [Component k] m)
+type LayoutOp k m = StateT LayoutOpState (WriterT [ComponentInfo k] m)
 
-runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [Component k])
+runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [ComponentInfo k])
 runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
-
 
 addGuideToLayout :: (Monad m) => Relationship -> LayoutOp k m GuideID
 addGuideToLayout r = do
@@ -96,12 +52,12 @@ addComponent p = tell [p]
 
 class (Monad m) => Container c k m where
   -- sadly the `Proxy` has to be used for the heterogenous collections to work
-  requiredWidth :: c -> Proxy k -> m (Maybe Int)
-  requiredWidth _ _ = return Nothing
-  requiredHeight :: c -> Proxy k -> m (Maybe Int)
-  requiredHeight _ _ = return Nothing
+  minWidth :: c -> Proxy k -> m (Maybe Int)
+  minHeight :: c -> Proxy k -> m (Maybe Int)
   addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()
 
-instance (Monad m) => Container k k m where
-  addToLayout k _ bounds renderGroup = addComponent $ Component bounds k renderGroup
+instance {-# OVERLAPPABLE #-} (Component k m) => Container k k m where
+  minWidth k _ = requiredWidth k
+  minHeight k _ = requiredHeight k
+  addToLayout k _ bounds renderGroup = addComponent $ ComponentInfo bounds k renderGroup
 

@@ -15,6 +15,7 @@ module FULE.Container.Divided
 
 import Data.Proxy
 
+import FULE.Component
 import FULE.Container
 import FULE.Internal.Util
 import FULE.Layout
@@ -51,14 +52,14 @@ data Divided s b u
     }
 
 instance (Container s b m, Container u b m) => Container (Divided s b u) b m where
-  requiredWidth divided proxy = do
-    sizedWidth <- requiredWidth (sizedOf divided) proxy
+  minWidth divided proxy = do
+    sizedWidth <- minWidth (sizedOf divided) proxy
     case sizingOf divided of
       SizedLeft  -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       SizedRight -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       _          -> return sizedWidth
-  requiredHeight divided proxy = do
-    sizedHeight <- requiredHeight (sizedOf divided) proxy
+  minHeight divided proxy = do
+    sizedHeight <- minHeight (sizedOf divided) proxy
     case sizingOf divided of
       SizedTop    -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       SizedBottom -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
@@ -119,7 +120,7 @@ makeDivided divided proxy bounds renderGroup config = do
       barUncon <- addGuideToLayout $ Relative (m * barSize) sizedInner Symmetric
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
       let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
-      addComponent $ Component barBounds (barGen sizedInner) renderGroup
+      addComponent $ ComponentInfo barBounds (barGen sizedInner) renderGroup
       return barUncon
     Static -> return sizedInner
   -- unconstrained

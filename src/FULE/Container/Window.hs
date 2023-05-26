@@ -12,6 +12,7 @@ import Control.Arrow
 import Data.Functor.Identity
 import Data.Proxy
 
+import FULE.Component
 import FULE.Container
 import FULE.Layout
 
@@ -30,10 +31,10 @@ window :: Int -> Int -> WindowControlGen k -> c -> Window c k
 window width height = Window (max 0 width) (max 0 height)
 
 
-layout :: (Container c k Identity) => Window c k -> (Layout, [Component k])
+layout :: (Container c k Identity) => Window c k -> (Layout, [ComponentInfo k])
 layout = first build . runIdentity . runLayoutOp . makeLayoutOp
 
-layoutM :: (Container c k m) => Window c k -> m (Layout, [Component k])
+layoutM :: (Container c k m) => Window c k -> m (Layout, [ComponentInfo k])
 layoutM = (first build <$>) . runLayoutOp . makeLayoutOp
 
 makeLayoutOp :: (Container c k m) => Window c k -> LayoutOp k m ()

@@ -23,8 +23,8 @@ type Layered = LayeredM Identity
 --  - render order
 --  - input censoring
 instance (Monad m) => Container (LayeredM m k) k m where
-  requiredWidth (Layered is) p = getMaxSize <$> mapM (`requiredWidth` p) is
-  requiredHeight (Layered is) p = getMaxSize <$> mapM (`requiredHeight` p) is
+  minWidth (Layered is) p = getMaxSize <$> mapM (`minWidth` p) is
+  minHeight (Layered is) p = getMaxSize <$> mapM (`minHeight` p) is
   addToLayout (Layered is) proxy bounds renderGroup = do
     renderGroup' <- Just <$> maybe nextRenderGroup pure renderGroup
     mapM_ (\i -> addToLayout i proxy bounds renderGroup') is

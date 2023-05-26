@@ -11,6 +11,7 @@ module FULE.Container.Centered
 import Control.Monad.Trans.Class
 import Data.Proxy
 
+import FULE.Component
 import FULE.Container
 import FULE.Layout
 
@@ -20,11 +21,11 @@ data Centering = Both | Horizontal | Vertical
 data Centered c = Centered Centering c
 
 instance (Container c k m) => Container (Centered c) k m where
-  requiredWidth (Centered _ c) = requiredWidth c
-  requiredHeight (Centered _ c) = requiredHeight c
+  minWidth (Centered _ c) = minWidth c
+  minHeight (Centered _ c) = minHeight c
   addToLayout (Centered centering c) proxy bounds renderGroup = do
-    reqWidth <- lift . lift $ requiredWidth c proxy
-    reqHeight <- lift . lift $ requiredHeight c proxy
+    reqWidth <- lift . lift $ minWidth c proxy
+    reqHeight <- lift . lift $ minHeight c proxy
     case (centering, reqWidth, reqHeight) of
       (Both, Just w, Just h) -> do
         (top, bottom) <- makeCenteringVerticallyGuides h bounds

@@ -55,14 +55,14 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
   minWidth divided proxy = do
     sizedWidth <- minWidth (sizedOf divided) proxy
     case sizingOf divided of
-      SizedLeft  -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
-      SizedRight -> return $ makeSize [sizedWidth, barSizeFor (dynamicsOf divided)]
+      SizedLeft  -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
+      SizedRight -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       _          -> return sizedWidth
   minHeight divided proxy = do
     sizedHeight <- minHeight (sizedOf divided) proxy
     case sizingOf divided of
-      SizedTop    -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
-      SizedBottom -> return $ makeSize [sizedHeight, barSizeFor (dynamicsOf divided)]
+      SizedTop    -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
+      SizedBottom -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       _           -> return sizedHeight
   addToLayout divided proxy bounds renderGroup =
     case sizingOf divided of
@@ -94,9 +94,6 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedOuterOf = bottomOf
         , multiplierOf = -1
         }
-
-makeSize :: [Maybe Int] -> Maybe Int
-makeSize = collapseTo sum
 
 
 data DivisionConfig

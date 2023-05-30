@@ -12,3 +12,6 @@ collapseTo f ms =
 getMaxSize :: [Maybe Int] -> Maybe Int
 getMaxSize = collapseTo maximum
 
+getTotalSize :: [Maybe Int] -> Maybe Int
+getTotalSize = collapseTo sum
+

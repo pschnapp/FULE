@@ -7,6 +7,7 @@ module FULE
  , module FULE.Container.Grid
  , module FULE.Container.Item
  , module FULE.Container.Layered
+ , module FULE.Container.Overflowed
  , module FULE.Container.Sized
  , module FULE.Container.Window
  , module FULE.Layout
@@ -20,6 +21,7 @@ import FULE.Container.Divided
 import FULE.Container.Grid
 import FULE.Container.Item
 import FULE.Container.Layered
+import FULE.Container.Overflowed
 import FULE.Container.Sized
 import FULE.Container.Window
 import FULE.Layout

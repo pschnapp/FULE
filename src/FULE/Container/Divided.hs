@@ -11,8 +11,13 @@ module FULE.Container.Divided
  , sizedLeft
  , sizedRight
  , sizedBottom
+ , sizeTo
+ , sizeToContents
  ) where
 
+import Control.Applicative
+import Control.Monad.Trans.Class
+import Data.Maybe
 import Data.Proxy
 
 import FULE.Component
@@ -45,7 +50,7 @@ static = Static
 data Divided s b u
   = Divided
     { sizingOf :: Sizing
-    , sizeOf :: Int
+    , sizeOf :: Maybe Int
     , dynamicsOf :: Dynamics b
     , sizedOf :: s
     , unconstrainedOf :: u
@@ -72,6 +77,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { bottomOf = g }
         , setSizedOuterOf = topOf
         , multiplierOf = 1
+        , directionOf = Horizontal
         }
       SizedLeft -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -79,6 +85,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { rightOf = g }
         , setSizedOuterOf = leftOf
         , multiplierOf = 1
+        , directionOf = Vertical
         }
       SizedRight -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -86,6 +93,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { leftOf = g }
         , setSizedOuterOf = rightOf
         , multiplierOf = -1
+        , directionOf = Vertical
         }
       SizedBottom -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -93,6 +101,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { topOf = g }
         , setSizedOuterOf = bottomOf
         , multiplierOf = -1
+        , directionOf = Horizontal
         }
 
 
@@ -102,6 +111,7 @@ data DivisionConfig
     , setSizedInnerOf :: GuideID -> Bounds -> Bounds
     , setSizedOuterOf :: Bounds -> GuideID
     , multiplierOf :: Int
+    , directionOf :: Direction
     }
 
 makeDivided
@@ -109,7 +119,13 @@ makeDivided
  => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b m ()
 makeDivided divided proxy bounds renderGroup config = do
   -- sized
-  sizedInner <- addGuideToLayout $ Relative (m * size) (getSizedOuter bounds) Asymmetric
+  dim <- case dir of
+    -- a Horizontal `dir` means we're split horizontally so should get the height
+    -- and likewise for Vertical and width
+    Horizontal -> lift . lift $ requiredHeight sized
+    Vertical -> lift . lift $ requiredWidth sized
+  let size' = m * fromMaybe 0 (size <|> dim)
+  sizedInner <- addGuideToLayout $ Relative size' (getSizedOuter bounds) Asymmetric
   addToLayout sized proxy (setSizedInner sizedInner bounds) renderGroup
   -- bar
   unconstrainedInner <- case dynamics of
@@ -134,18 +150,25 @@ makeDivided divided proxy bounds renderGroup config = do
       , setSizedInnerOf = setSizedInner
       , setSizedOuterOf = getSizedOuter
       , multiplierOf = m
+      , directionOf = dir
       } = config
 
 
-sizedTop :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedTop = Divided SizedTop . max 0
+sizedTop :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedTop = Divided SizedTop . fmap (max 0)
 
-sizedLeft :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedLeft = Divided SizedLeft . max 0
+sizedLeft :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedLeft = Divided SizedLeft . fmap (max 0)
 
-sizedRight :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedRight = Divided SizedRight . max 0
+sizedRight :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedRight = Divided SizedRight . fmap (max 0)
 
-sizedBottom :: Int -> Dynamics b -> s -> u -> Divided s b u
-sizedBottom = Divided SizedBottom . max 0
+sizedBottom :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedBottom = Divided SizedBottom . fmap (max 0)
+
+sizeTo :: Int -> Maybe Int
+sizeTo = Just
+
+sizeToContents :: Maybe Int
+sizeToContents = Nothing
 

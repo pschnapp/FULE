@@ -3,6 +3,9 @@ module FULE.Internal.Util where
 import Data.Maybe
 
 
+data Direction = Horizontal | Vertical
+
+
 collapseTo :: ([a] -> b) -> [Maybe a] -> Maybe b
 collapseTo f ms =
   case catMaybes ms of

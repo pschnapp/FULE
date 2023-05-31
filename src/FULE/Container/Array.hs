@@ -23,8 +23,6 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
-data Direction = Horizontal | Vertical
-
 data ArrayM m k
   = Array
     { horizPaddingOf :: Int

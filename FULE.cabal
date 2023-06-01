@@ -34,7 +34,7 @@ library
       FULE.Container.Grid
       FULE.Container.Item
       FULE.Container.Layered
-      FULE.Container.Overflowed
+      FULE.Container.Overflow
       FULE.Container.Sized
       FULE.Container.Window
       FULE.Internal.Direction

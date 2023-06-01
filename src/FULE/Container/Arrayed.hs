@@ -2,9 +2,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module FULE.Container.Array
- ( ArrayM
- , Array
+module FULE.Container.Arrayed
+ ( ArrayedM
+ , Arrayed
  , arrayedHoriz
  , arrayedVert
  ) where
@@ -24,33 +24,33 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
-data ArrayM m k
-  = Array
+data ArrayedM m k
+  = Arrayed
     { horizPaddingOf :: Int
     , vertPaddingOf :: Int
     , directionOf :: Direction
     , itemsOf :: [ItemM m k]
     }
 
-type Array = ArrayM Identity
+type Arrayed = ArrayedM Identity
 
 -- NOTE: no padding is added when there are no items to display
-instance (Monad m) => Container (ArrayM m k) k m where
-  minWidth (Array h v d is) proxy = case d of
+instance (Monad m) => Container (ArrayedM m k) k m where
+  minWidth (Arrayed h v d is) proxy = case d of
     Horizontal -> do
       let padding = (length is + 1) * h
       fmap (+ padding) . getTotalSize <$> mapM (`minWidth` proxy) is
     Vertical -> do
       let padding = 2 * h
       fmap (+ padding) . getMaxSize <$> mapM (`minWidth` proxy) is
-  minHeight (Array h v d is) proxy = case d of
+  minHeight (Arrayed h v d is) proxy = case d of
     Horizontal -> do
       let padding = 2 * v
       fmap (+ padding) . getMaxSize <$> mapM (`minHeight` proxy) is
     Vertical -> do
       let padding = (length is + 1) * v
       fmap (+ padding) . getTotalSize <$> mapM (`minHeight` proxy) is
-  addToLayout (Array h v d is) proxy bounds renderGroup = unless (null is) do
+  addToLayout (Arrayed h v d is) proxy bounds renderGroup = unless (null is) do
     let (refBoundingGuide, getRefBoundingGuide) = case d of
           Horizontal -> (leftOf bounds, rightOf)
           Vertical -> (topOf bounds, bottomOf)
@@ -84,12 +84,12 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
       bottom <- addGuideToLayout $ Relative height boundingGuide Asymmetric
       return (Bounds boundingGuide alignmentGuide right bottom)
 
-arrayedHoriz :: Int -> Int -> [ItemM m k] -> ArrayM m k
+arrayedHoriz :: Int -> Int -> [ItemM m k] -> ArrayedM m k
 arrayedHoriz horiz vert = arrayed horiz vert Horizontal
 
-arrayedVert :: Int -> Int -> [ItemM m k] -> ArrayM m k
+arrayedVert :: Int -> Int -> [ItemM m k] -> ArrayedM m k
 arrayedVert horiz vert = arrayed horiz vert Vertical
 
-arrayed :: Int -> Int -> Direction -> [ItemM m k] -> ArrayM m k
-arrayed horiz vert = Array (max 0 horiz) (max 0 vert)
+arrayed :: Int -> Int -> Direction -> [ItemM m k] -> ArrayedM m k
+arrayed horiz vert = Arrayed (max 0 horiz) (max 0 vert)
 

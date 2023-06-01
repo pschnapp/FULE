@@ -1,7 +1,7 @@
 module FULE
  ( module FULE.Component
  , module FULE.Container
- , module FULE.Container.Array
+ , module FULE.Container.Arrayed
  , module FULE.Container.Centered
  , module FULE.Container.Divided
  , module FULE.Container.Grid
@@ -15,7 +15,7 @@ module FULE
 
 import FULE.Component
 import FULE.Container
-import FULE.Container.Array
+import FULE.Container.Arrayed
 import FULE.Container.Centered
 import FULE.Container.Divided
 import FULE.Container.Grid

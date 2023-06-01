@@ -28,7 +28,7 @@ library
       FULE
       FULE.Component
       FULE.Container
-      FULE.Container.Array
+      FULE.Container.Arrayed
       FULE.Container.Centered
       FULE.Container.Divided
       FULE.Container.Grid

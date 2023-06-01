@@ -19,6 +19,7 @@ import Data.Proxy
 import FULE.Component
 import FULE.Container
 import FULE.Container.Item
+import FULE.Internal.Direction
 import FULE.Internal.Util
 import FULE.Layout
 

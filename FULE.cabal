@@ -37,6 +37,7 @@ library
       FULE.Container.Overflowed
       FULE.Container.Sized
       FULE.Container.Window
+      FULE.Internal.Direction
       FULE.Internal.Sparse
       FULE.Internal.Util
       FULE.Layout

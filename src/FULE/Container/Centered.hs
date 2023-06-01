@@ -13,12 +13,11 @@ import Data.Proxy
 
 import FULE.Component
 import FULE.Container
+import FULE.Internal.Direction
 import FULE.Layout
 
 
-data Centering = Both | Horizontal | Vertical
-
-data Centered c = Centered Centering c
+data Centered c = Centered (Maybe Direction) c
 
 instance (Container c k m) => Container (Centered c) k m where
   minWidth (Centered _ c) = minWidth c
@@ -27,16 +26,16 @@ instance (Container c k m) => Container (Centered c) k m where
     reqWidth <- lift . lift $ minWidth c proxy
     reqHeight <- lift . lift $ minHeight c proxy
     case (centering, reqWidth, reqHeight) of
-      (Both, Just w, Just h) -> do
+      (Nothing, Just w, Just h) -> do
         (top, bottom) <- makeCenteringVerticallyGuides h bounds
         (left, right) <- makeCenteringHorizontallyGuides w bounds
         let bounds' = Bounds top left right bottom
         addToLayout c proxy bounds' renderGroup
-      (Horizontal, Just w, _) -> do
+      (Just Horizontal, Just w, _) -> do
         (left, right) <- makeCenteringHorizontallyGuides w bounds
         let bounds' = bounds { leftOf = left, rightOf = right }
         addToLayout c proxy bounds' renderGroup
-      (Vertical, _, Just h) -> do
+      (Just Vertical, _, Just h) -> do
         (top, bottom) <- makeCenteringVerticallyGuides h bounds
         let bounds' = bounds { topOf = top, bottomOf = bottom }
         addToLayout c proxy bounds' renderGroup
@@ -64,11 +63,11 @@ makeCenteringVerticallyGuides h bounds = do
   return (top, bottom)
 
 centeredHoriz :: c -> Centered c
-centeredHoriz = Centered Horizontal
+centeredHoriz = Centered (Just Horizontal)
 
 centeredVert :: c -> Centered c
-centeredVert = Centered Vertical
+centeredVert = Centered (Just Vertical)
 
 centered :: c -> Centered c
-centered = Centered Both
+centered = Centered Nothing
 

@@ -22,6 +22,7 @@ import Data.Proxy
 
 import FULE.Component
 import FULE.Container
+import FULE.Internal.Direction
 import FULE.Internal.Util
 import FULE.Layout
 

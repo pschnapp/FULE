@@ -13,7 +13,7 @@ import Data.Maybe
 
 import FULE.Component
 import FULE.Container
-import FULE.Internal.Util -- Direction
+import FULE.Internal.Direction
 import FULE.Layout
 
 

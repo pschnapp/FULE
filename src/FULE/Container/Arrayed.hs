@@ -7,6 +7,9 @@ module FULE.Container.Arrayed
  , Arrayed
  , arrayedHoriz
  , arrayedVert
+ , Padding
+ , padding
+ , noPadding
  ) where
 
 import Control.Monad
@@ -22,6 +25,15 @@ import FULE.Container.Item
 import FULE.Internal.Direction
 import FULE.Internal.Util
 import FULE.Layout
+
+
+type Padding = (Int, Int)
+
+padding :: Int -> Int -> Padding
+padding horiz vert = (horiz, vert)
+
+noPadding :: Padding
+noPadding = (0, 0)
 
 
 data ArrayedM m k
@@ -84,12 +96,12 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
       bottom <- addGuideToLayout $ Relative height boundingGuide Asymmetric
       return (Bounds boundingGuide alignmentGuide right bottom)
 
-arrayedHoriz :: Int -> Int -> [ItemM m k] -> ArrayedM m k
-arrayedHoriz horiz vert = arrayed horiz vert Horizontal
+arrayedHoriz :: Padding -> [ItemM m k] -> ArrayedM m k
+arrayedHoriz padding = arrayed padding Horizontal
 
-arrayedVert :: Int -> Int -> [ItemM m k] -> ArrayedM m k
-arrayedVert horiz vert = arrayed horiz vert Vertical
+arrayedVert :: Padding -> [ItemM m k] -> ArrayedM m k
+arrayedVert padding = arrayed padding Vertical
 
-arrayed :: Int -> Int -> Direction -> [ItemM m k] -> ArrayedM m k
-arrayed horiz vert = Arrayed (max 0 horiz) (max 0 vert)
+arrayed :: Padding -> Direction -> [ItemM m k] -> ArrayedM m k
+arrayed (horiz, vert) = Arrayed (max 0 horiz) (max 0 vert)
 

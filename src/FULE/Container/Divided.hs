@@ -6,11 +6,12 @@ module FULE.Container.Divided
  , Dynamics
  , dynamic
  , static
- , Sizing
+ , SizedSide
  , sizedTop
  , sizedLeft
  , sizedRight
  , sizedBottom
+ , Size
  , sizeTo
  , sizeToContents
  ) where
@@ -27,7 +28,16 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
-data Sizing = SizedTop | SizedLeft | SizedRight | SizedBottom
+type Size = Maybe Int
+
+sizeTo :: Int -> Size
+sizeTo = Just
+
+sizeToContents :: Size
+sizeToContents = Nothing
+
+
+data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom
 
 
 data Dynamics b
@@ -50,28 +60,28 @@ static = Static
 
 data Divided s b u
   = Divided
-    { sizingOf :: Sizing
-    , sizeOf :: Maybe Int
+    { sizedSideOf :: SizedSide
+    , sizeOf :: Size
     , dynamicsOf :: Dynamics b
-    , sizedOf :: s
-    , unconstrainedOf :: u
+    , sizedContentOf :: s
+    , unconstrainedContentOf :: u
     }
 
 instance (Container s b m, Container u b m) => Container (Divided s b u) b m where
   minWidth divided proxy = do
-    sizedWidth <- minWidth (sizedOf divided) proxy
-    case sizingOf divided of
+    sizedWidth <- minWidth (sizedContentOf divided) proxy
+    case sizedSideOf divided of
       SizedLeft  -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       SizedRight -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
       _          -> return sizedWidth
   minHeight divided proxy = do
-    sizedHeight <- minHeight (sizedOf divided) proxy
-    case sizingOf divided of
+    sizedHeight <- minHeight (sizedContentOf divided) proxy
+    case sizedSideOf divided of
       SizedTop    -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       SizedBottom -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
       _           -> return sizedHeight
   addToLayout divided proxy bounds renderGroup =
-    case sizingOf divided of
+    case sizedSideOf divided of
       SizedTop -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { topOf = g }
@@ -143,8 +153,8 @@ makeDivided divided proxy bounds renderGroup config = do
     Divided
       { sizeOf = size
       , dynamicsOf = dynamics
-      , sizedOf = sized
-      , unconstrainedOf = unconstrained
+      , sizedContentOf = sized
+      , unconstrainedContentOf = unconstrained
       } = divided
     DivisionConfig
       { setUnconInnerOf = setUnconInner
@@ -155,21 +165,15 @@ makeDivided divided proxy bounds renderGroup config = do
       } = config
 
 
-sizedTop :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedTop :: Size -> Dynamics b -> s -> u -> Divided s b u
 sizedTop = Divided SizedTop . fmap (max 0)
 
-sizedLeft :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedLeft :: Size -> Dynamics b -> s -> u -> Divided s b u
 sizedLeft = Divided SizedLeft . fmap (max 0)
 
-sizedRight :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedRight :: Size -> Dynamics b -> s -> u -> Divided s b u
 sizedRight = Divided SizedRight . fmap (max 0)
 
-sizedBottom :: Maybe Int -> Dynamics b -> s -> u -> Divided s b u
+sizedBottom :: Size -> Dynamics b -> s -> u -> Divided s b u
 sizedBottom = Divided SizedBottom . fmap (max 0)
-
-sizeTo :: Int -> Maybe Int
-sizeTo = Just
-
-sizeToContents :: Maybe Int
-sizeToContents = Nothing
 

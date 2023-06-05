@@ -86,12 +86,18 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
   height <- fmap (fromMaybe 0) . lift . lift $ minHeight i proxy
   case dir of
     Horizontal -> do
-      boundingGuide <- addGuideToLayout $ Relative horiz refBoundingGuide Asymmetric
+      boundingGuide <-
+        if horiz /= 0
+        then addGuideToLayout $ Relative horiz refBoundingGuide Asymmetric
+        else return refBoundingGuide
       right <- addGuideToLayout $ Relative width boundingGuide Asymmetric
       bottom <- addGuideToLayout $ Relative height alignmentGuide Asymmetric
       return (Bounds alignmentGuide boundingGuide right bottom)
     Vertical -> do
-      boundingGuide <- addGuideToLayout $ Relative vert refBoundingGuide Asymmetric
+      boundingGuide <-
+        if vert /= 0
+        then addGuideToLayout $ Relative vert refBoundingGuide Asymmetric
+        else return refBoundingGuide
       right <- addGuideToLayout $ Relative width alignmentGuide Asymmetric
       bottom <- addGuideToLayout $ Relative height boundingGuide Asymmetric
       return (Bounds boundingGuide alignmentGuide right bottom)

@@ -70,15 +70,19 @@ data Divided s b u
 instance (Container s b m, Container u b m) => Container (Divided s b u) b m where
   minWidth divided proxy = do
     sizedWidth <- minWidth (sizedContentOf divided) proxy
+    let barSize = barSizeFor (dynamicsOf divided)
+    let sizedWidth' = getTotalSize [sizeOf divided <|> sizedWidth, barSize]
     case sizedSideOf divided of
-      SizedLeft  -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
-      SizedRight -> return $ getTotalSize [sizedWidth, barSizeFor (dynamicsOf divided)]
+      SizedLeft  -> return sizedWidth'
+      SizedRight -> return sizedWidth'
       _          -> return sizedWidth
   minHeight divided proxy = do
     sizedHeight <- minHeight (sizedContentOf divided) proxy
+    let barSize = barSizeFor (dynamicsOf divided)
+    let sizedHeight' = getTotalSize [sizeOf divided <|> sizedHeight, barSize]
     case sizedSideOf divided of
-      SizedTop    -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
-      SizedBottom -> return $ getTotalSize [sizedHeight, barSizeFor (dynamicsOf divided)]
+      SizedTop    -> return sizedHeight'
+      SizedBottom -> return sizedHeight'
       _           -> return sizedHeight
   addToLayout divided proxy bounds renderGroup =
     case sizedSideOf divided of
@@ -133,8 +137,8 @@ makeDivided divided proxy bounds renderGroup config = do
   dim <- case dir of
     -- a Horizontal `dir` means we're split horizontally so should get the height
     -- and likewise for Vertical and width
-    Horizontal -> lift . lift $ requiredHeight sized
-    Vertical -> lift . lift $ requiredWidth sized
+    Horizontal -> lift . lift $ minHeight sized proxy
+    Vertical -> lift . lift $ minWidth sized proxy
   let size' = m * fromMaybe 0 (size <|> dim)
   sizedInner <- addGuideToLayout $ Relative size' (getSizedOuter bounds) Asymmetric
   addToLayout sized proxy (setSizedInner sizedInner bounds) renderGroup

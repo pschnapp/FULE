@@ -29,12 +29,12 @@ library
       FULE.Component
       FULE.Container
       FULE.Container.Arrayed
-      FULE.Container.Centered
       FULE.Container.Divided
       FULE.Container.Grid
       FULE.Container.Item
       FULE.Container.Layered
       FULE.Container.Overflow
+      FULE.Container.Positioned
       FULE.Container.Sized
       FULE.Container.Window
       FULE.Internal.Direction

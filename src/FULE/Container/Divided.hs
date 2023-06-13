@@ -23,9 +23,9 @@ import Data.Proxy
 
 import FULE.Component
 import FULE.Container
-import FULE.Internal.Direction
 import FULE.Internal.Util
 import FULE.Layout
+import FULE.Orientation
 
 
 type Size = Maybe Int
@@ -92,7 +92,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { bottomOf = g }
         , setSizedOuterOf = topOf
         , multiplierOf = 1
-        , directionOf = Horizontal
+        , orientationOf = Horizontal
         }
       SizedLeft -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -100,7 +100,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { rightOf = g }
         , setSizedOuterOf = leftOf
         , multiplierOf = 1
-        , directionOf = Vertical
+        , orientationOf = Vertical
         }
       SizedRight -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -108,7 +108,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { leftOf = g }
         , setSizedOuterOf = rightOf
         , multiplierOf = -1
-        , directionOf = Vertical
+        , orientationOf = Vertical
         }
       SizedBottom -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
@@ -116,7 +116,7 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
         , setSizedInnerOf = \g b -> b { topOf = g }
         , setSizedOuterOf = bottomOf
         , multiplierOf = -1
-        , directionOf = Horizontal
+        , orientationOf = Horizontal
         }
 
 
@@ -126,7 +126,7 @@ data DivisionConfig
     , setSizedInnerOf :: GuideID -> Bounds -> Bounds
     , setSizedOuterOf :: Bounds -> GuideID
     , multiplierOf :: Int
-    , directionOf :: Direction
+    , orientationOf :: Orientation
     }
 
 makeDivided
@@ -134,8 +134,8 @@ makeDivided
  => Divided s b u -> Proxy b -> Bounds -> RenderGroup -> DivisionConfig -> LayoutOp b m ()
 makeDivided divided proxy bounds renderGroup config = do
   -- sized
-  dim <- case dir of
-    -- a Horizontal `dir` means we're split horizontally so should get the height
+  dim <- case orientation of
+    -- a Horizontal `orientation` means we're split horizontally so should get the height
     -- and likewise for Vertical and width
     Horizontal -> lift . lift $ minHeight sized proxy
     Vertical -> lift . lift $ minWidth sized proxy
@@ -165,7 +165,7 @@ makeDivided divided proxy bounds renderGroup config = do
       , setSizedInnerOf = setSizedInner
       , setSizedOuterOf = getSizedOuter
       , multiplierOf = m
-      , directionOf = dir
+      , orientationOf = orientation
       } = config
 
 

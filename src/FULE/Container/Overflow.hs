@@ -13,20 +13,20 @@ import Data.Maybe
 
 import FULE.Component
 import FULE.Container
-import FULE.Internal.Direction
 import FULE.Layout
+import FULE.Orientation
 
 
-data Overflow c = Overflow (Maybe Direction) c
+data Overflow c = Overflow (Maybe Orientation) c
 
 instance (Container c k m) => Container (Overflow c) k m where
-  minWidth (Overflow dir c) proxy = case dir of
+  minWidth (Overflow o c) proxy = case o of
     Just Vertical -> minWidth c proxy
     _ -> return Nothing
-  minHeight (Overflow dir c) proxy = case dir of
+  minHeight (Overflow o c) proxy = case o of
     Just Horizontal -> minHeight c proxy
     _ -> return Nothing
-  addToLayout (Overflow dir c) proxy bounds renderGroup = do
+  addToLayout (Overflow _ c) proxy bounds renderGroup = do
     reqWidth <- lift . lift $ minWidth c proxy
     reqHeight <- lift . lift $ minHeight c proxy
     let Bounds t l r b = bounds

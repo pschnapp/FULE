@@ -11,6 +11,7 @@ module FULE
  , module FULE.Container.Sized
  , module FULE.Container.Window
  , module FULE.Layout
+ , module FULE.Orientation
  ) where
 
 import FULE.Component
@@ -25,4 +26,5 @@ import FULE.Container.Positioned
 import FULE.Container.Sized
 import FULE.Container.Window
 import FULE.Layout
+import FULE.Orientation
 

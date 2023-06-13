@@ -40,9 +40,11 @@ sizeToContents = Nothing
 data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom
 
 
+type BarGenerator b = Orientation -> GuideID -> b
+
 data Dynamics b
   = Dynamic
-    { contentsGenOf :: GuideID -> b
+    { contentsGenOf :: BarGenerator b
     , barSizeOf :: Int
     }
   | Static
@@ -51,8 +53,8 @@ barSizeFor :: Dynamics b -> Maybe Int
 barSizeFor (Dynamic _ s) = Just s
 barSizeFor Static = Nothing
 
-dynamic :: (GuideID -> b) -> Int -> Dynamics b
-dynamic barGen size = Dynamic barGen (max 0 size)
+dynamic :: BarGenerator b -> Int -> Dynamics b
+dynamic genBar size = Dynamic genBar (max 0 size)
 
 static :: Dynamics b
 static = Static
@@ -144,11 +146,11 @@ makeDivided divided proxy bounds renderGroup config = do
   addToLayout sized proxy (setSizedInner sizedInner bounds) renderGroup
   -- bar
   unconstrainedInner <- case dynamics of
-    Dynamic barGen barSize -> do
+    Dynamic genBar barSize -> do
       barUncon <- addGuideToLayout $ Relative (m * barSize) sizedInner Symmetric
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
       let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
-      addComponent $ ComponentInfo barBounds (barGen sizedInner) renderGroup
+      addComponent $ ComponentInfo barBounds (genBar orientation sizedInner) renderGroup
       return barUncon
     Static -> return sizedInner
   -- unconstrained

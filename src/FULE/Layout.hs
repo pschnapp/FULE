@@ -38,13 +38,17 @@ data Relationship
 
 
 data LayoutDesign
-  --    dependency     elasticity     constraint   guides (vector)
-  = D (Matrix Double) (Matrix Double) (Matrix Double) (Matrix Double)
+  = LayoutDesign
+    { designPlasticityOf :: Matrix Double
+    , designElasticityOf :: Matrix Double
+    , designConstraintsOf :: Matrix Double
+    , designGuidesOf :: Matrix Double
+    }
 
 type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
 
 makeDesign :: LayoutDesign
-makeDesign = D empty empty empty empty
+makeDesign = LayoutDesign empty empty empty empty
 
 addGuide :: Relationship -> LayoutDesignOp
 addGuide (Absolute pos) = addAbsolute pos
@@ -52,56 +56,76 @@ addGuide (Relative offset gid dep) = addRelative offset gid dep
 addGuide (Between r1 r2) = addBetween r1 r2
 
 addAbsolute :: Int -> LayoutDesignOp
-addAbsolute position (D deps elas cons guides) =
-  (G gid, D deps' elas' cons' guides')
+addAbsolute position design =
+  ( G gid
+  , LayoutDesign
+    { designPlasticityOf = set (gid, gid) 1 (designPlasticityOf design)
+    , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
+    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designGuidesOf = set (gid, 1) (fromIntegral position) (designGuidesOf design)
+    }
+  )
   where
-    (r, _) = dims deps
-    gid = r + 1  
-    deps' = set (gid, gid) 1 deps
-    elas' = set (gid, gid) 1 elas
-    cons' = expandTo (dims elas') cons
-    guides' = set (gid, 1) (fromIntegral position) guides
+    gid = nextGuideNumberFor design
 
 addRelative :: Int -> GuideID -> DependencyType -> LayoutDesignOp
-addRelative offset (G ref) dep (D deps elas cons guides) =
-  (G gid, D deps' elas' cons' guides')
+addRelative offset (G ref) dep design@(LayoutDesign { designGuidesOf = guides }) =
+  ( G gid
+  , LayoutDesign
+    { designPlasticityOf =
+        set (gid, gid) 1 . set (gid, ref) 1 . symRelat $ designPlasticityOf design
+    , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
+    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designGuidesOf = set (gid, 1) pos guides
+    }
+  )
   where
-    (r, _) = dims deps
-    gid = r + 1
-    deps' = set (gid, gid) 1 . set (gid, ref) 1 $
-      case dep of
-        Asymmetric -> deps
-        Symmetric  -> set (ref, gid) 1 deps
-    elas' = set (gid, gid) 1 elas
-    cons' = expandTo (dims elas') cons
+    gid = nextGuideNumberFor design
+    symRelat = case dep of
+      Asymmetric -> id
+      Symmetric  -> set (ref, gid) 1
     pos = fromIntegral offset + get (ref, 1) guides
-    guides' = set (gid, 1) pos guides
 
 addBetween :: (GuideID, Double) -> (GuideID, Double) -> LayoutDesignOp
-addBetween (G ref1, pct1) (G ref2, pct2) (D deps elas cons guides) =
-  (G gid, D deps' elas' cons' guides')
+addBetween (G ref1, pct1) (G ref2, pct2) design@(LayoutDesign { designGuidesOf = guides }) =
+  ( G gid
+  , LayoutDesign
+    { designPlasticityOf = set (gid, gid) 1 (designPlasticityOf design)
+    , designElasticityOf =
+        -- yes the indicies are supposed to mismatch in this
+        set (gid, gid) 1 . set (gid, ref1) pct2 . set (gid, ref2) pct1 $
+          designElasticityOf design
+    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designGuidesOf = set (gid, 1) pos guides
+    }
+  )
   where
-    (r, _) = dims deps
-    gid = r + 1
-    deps' = set (gid, gid) 1 deps
-    -- yes the percents are supposed to be flipped in these:
-    elas' = set (gid, gid) 1 . set (gid, ref1) pct2 . set (gid, ref2) pct1 $ elas
-    cons' = expandTo (dims elas') cons
+    gid = nextGuideNumberFor design
+    -- yes the indicies are supposed to mismatch in this
     pos = pct2 * get (ref1, 1) guides + pct1 * get (ref2, 1) guides
-    guides' = set (gid, 1) pos guides
+
+nextGuideNumberFor :: LayoutDesign -> Int
+nextGuideNumberFor (LayoutDesign { designGuidesOf = guides }) =
+  (+1) . fst $ dims guides
 
 
 data Layout
-  = L
-    { dependencyMatrixOf :: Matrix Double
-    , elasticityMatrixOf :: Matrix Double
-    , constraintMatrixOf :: Matrix Double
-    , propagatedMatrixOf :: Matrix Double
-    , guidesVectorOf :: Matrix Double
+  = Layout
+    { layoutPlasticityOf :: Matrix Double
+    , layoutElasticityOf :: Matrix Double
+    , layoutConstraintsOf :: Matrix Double
+    , layoutTransformationOf :: Matrix Double
+    , layoutGuidesOf :: Matrix Double
     }
 
 instance Show Layout where
-  show l = concat ["\n", show (propagatedMatrixOf l), "\n\n", show (guidesVectorOf l), "\n"]
+  show l = concat
+    [ "\n"
+    , show (layoutTransformationOf l)
+    , "\n\n"
+    , show (layoutGuidesOf l)
+    , "\n"
+    ]
 
 propagate :: (Num a) => Matrix a -> Matrix a
 propagate m =
@@ -111,25 +135,41 @@ propagate m =
   else propagate m'
 
 build :: LayoutDesign -> Layout
-build (D deps elas cons guides) = L deps elas cons prop guides
-  where prop = propagate deps `mul` elas
+build design =
+  Layout
+  { layoutPlasticityOf = designPlasticityOf design
+  , layoutElasticityOf = designElasticityOf design
+  , layoutConstraintsOf = designConstraintsOf design
+  , layoutTransformationOf =
+      propagate (designPlasticityOf design)
+      `mul` designElasticityOf design
+  , layoutGuidesOf = designGuidesOf design
+  }
 
 design :: Layout -> LayoutDesign
-design (L d e c _ g) = D d e c g
+design layout =
+  LayoutDesign
+  { designPlasticityOf = layoutPlasticityOf layout
+  , designElasticityOf = layoutElasticityOf layout
+  , designConstraintsOf = layoutConstraintsOf layout
+  , designGuidesOf = layoutGuidesOf layout
+  }
 
 getGuide :: GuideID -> Layout -> Int
-getGuide (G gid) = floor . get (gid, 1) . guidesVectorOf
+getGuide (G gid) = floor . get (gid, 1) . layoutGuidesOf
 
 getGuides :: [GuideID] -> Layout -> [Int]
 getGuides gs layout = map (`getGuide` layout) gs
 
 reactToChange :: GuideID -> Int -> Layout -> Layout
-reactToChange (G gid) amt l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
+reactToChange (G gid) amt l@(Layout { layoutTransformationOf = t, layoutGuidesOf = g }) =
+  l { layoutGuidesOf = add g (t `mul` changes) }
   where
     changes = matrix (dims g) [((gid, 1), fromIntegral amt)]
 
 reactToChanges :: [(GuideID, Int)] -> Layout -> Layout
-reactToChanges pairs l@(L _ _ _ p g) = l { guidesVectorOf = add g (p `mul` changes) }
+reactToChanges pairs l@(Layout { layoutTransformationOf = t, layoutGuidesOf = g }) =
+  l { layoutGuidesOf = add g (t `mul` changes) }
   where
     convert (G gid, amt) = ((gid, 1), fromIntegral amt)
     changes = matrix (dims g) (map convert pairs)

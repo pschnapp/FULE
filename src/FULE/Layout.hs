@@ -34,12 +34,12 @@ data Relationship
     , dependencyOf :: GuideID
     , dependencyTypeOf :: DependencyType
     }
-  | Between (GuideID, Float) (GuideID, Float)
+  | Between (GuideID, Double) (GuideID, Double)
 
 
 data LayoutDesign
   --    dependency     elasticity     constraint   guides (vector)
-  = D (Matrix Float) (Matrix Float) (Matrix Float) (Matrix Float)
+  = D (Matrix Double) (Matrix Double) (Matrix Double) (Matrix Double)
 
 type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
 
@@ -77,7 +77,7 @@ addRelative offset (G ref) dep (D deps elas cons guides) =
     pos = fromIntegral offset + get (ref, 1) guides
     guides' = set (gid, 1) pos guides
 
-addBetween :: (GuideID, Float) -> (GuideID, Float) -> LayoutDesignOp
+addBetween :: (GuideID, Double) -> (GuideID, Double) -> LayoutDesignOp
 addBetween (G ref1, pct1) (G ref2, pct2) (D deps elas cons guides) =
   (G gid, D deps' elas' cons' guides')
   where
@@ -93,11 +93,11 @@ addBetween (G ref1, pct1) (G ref2, pct2) (D deps elas cons guides) =
 
 data Layout
   = L
-    { dependencyMatrixOf :: Matrix Float
-    , elasticityMatrixOf :: Matrix Float
-    , constraintMatrixOf :: Matrix Float
-    , propagatedMatrixOf :: Matrix Float
-    , guidesVectorOf :: Matrix Float
+    { dependencyMatrixOf :: Matrix Double
+    , elasticityMatrixOf :: Matrix Double
+    , constraintMatrixOf :: Matrix Double
+    , propagatedMatrixOf :: Matrix Double
+    , guidesVectorOf :: Matrix Double
     }
 
 instance Show Layout where

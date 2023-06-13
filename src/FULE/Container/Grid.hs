@@ -44,7 +44,7 @@ instance (Monad m) => Container (GridM m k) k m where
           ]
     mapM_ (\(i, b) -> addToLayout i proxy b renderGroup) (zip is boundsForItems)
 
-percents :: Int -> [Float]
+percents :: Int -> [Double]
 percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]
 
 grid :: Int -> Int -> [ItemM m k] -> GridM m k

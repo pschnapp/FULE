@@ -28,12 +28,12 @@ import FULE.Layout
 import FULE.Orientation
 
 
-type Size = Maybe Int
+type Size a = Maybe a
 
-sizedTo :: Int -> Size
+sizedTo :: a -> Size a
 sizedTo = Just
 
-sizedToContents :: Size
+sizedToContents :: Size a
 sizedToContents = Nothing
 
 
@@ -63,7 +63,7 @@ static = Static
 data Divided s b u
   = Divided
     { sizedSideOf :: SizedSide
-    , sizeOf :: Size
+    , sizeOf :: Size Int
     , dynamicsOf :: Dynamics b
     , sizedContentOf :: s
     , unconstrainedContentOf :: u
@@ -180,15 +180,15 @@ makeDivided divided proxy bounds renderGroup config = do
     (unconConstraint, sizedConstraint) = if m == 1 then (LTE, GTE) else (GTE, LTE)
 
 
-sizedTop :: Size -> Dynamics b -> s -> u -> Divided s b u
+sizedTop :: Size Int -> Dynamics b -> s -> u -> Divided s b u
 sizedTop = Divided SizedTop . fmap (max 0)
 
-sizedLeft :: Size -> Dynamics b -> s -> u -> Divided s b u
+sizedLeft :: Size Int -> Dynamics b -> s -> u -> Divided s b u
 sizedLeft = Divided SizedLeft . fmap (max 0)
 
-sizedRight :: Size -> Dynamics b -> s -> u -> Divided s b u
+sizedRight :: Size Int -> Dynamics b -> s -> u -> Divided s b u
 sizedRight = Divided SizedRight . fmap (max 0)
 
-sizedBottom :: Size -> Dynamics b -> s -> u -> Divided s b u
+sizedBottom :: Size Int -> Dynamics b -> s -> u -> Divided s b u
 sizedBottom = Divided SizedBottom . fmap (max 0)
 

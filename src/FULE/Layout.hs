@@ -1,10 +1,15 @@
 module FULE.Layout
- ( GuideID
+ ( LayoutDesign
+ , makeDesign
+ --
+ , GuideID
  , DependencyType(..)
  , Positioning(..)
- , LayoutDesign
- , makeDesign
  , addGuide
+ --
+ , Constraint(..)
+ , addGuideConstraint
+ --
  , Layout
  , build
  , design
@@ -14,16 +19,29 @@ module FULE.Layout
  , reactToChanges
  ) where
 
-import FULE.Internal.Sparse
+import FULE.Internal.Sparse as Matrix
+
+
+data LayoutDesign
+  = LayoutDesign
+    { designPlasticityOf :: Matrix Double
+    , designElasticityOf :: Matrix Double
+    , designLTEConstraintsOf :: Matrix Double
+    , designGTEConstraintsOf :: Matrix Double
+    , designGuidesOf :: Matrix Double
+    }
+
+type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
+
+makeDesign :: LayoutDesign
+makeDesign = LayoutDesign empty empty empty empty empty
 
 
 newtype GuideID = G Int
-  deriving (Show)
-
+  deriving (Eq, Show)
 
 data DependencyType = Asymmetric | Symmetric
-  deriving (Show)
-
+  deriving (Eq, Show)
 
 data Positioning
   = Absolute
@@ -36,20 +54,6 @@ data Positioning
     }
   | Between (GuideID, Double) (GuideID, Double)
 
-
-data LayoutDesign
-  = LayoutDesign
-    { designPlasticityOf :: Matrix Double
-    , designElasticityOf :: Matrix Double
-    , designConstraintsOf :: Matrix Double
-    , designGuidesOf :: Matrix Double
-    }
-
-type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
-
-makeDesign :: LayoutDesign
-makeDesign = LayoutDesign empty empty empty empty
-
 addGuide :: Positioning -> LayoutDesignOp
 addGuide (Absolute pos) = addAbsolute pos
 addGuide (Relative offset gid dep) = addRelative offset gid dep 
@@ -61,7 +65,8 @@ addAbsolute position design =
   , LayoutDesign
     { designPlasticityOf = set (gid, gid) 1 (designPlasticityOf design)
     , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
-    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
+    , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) (fromIntegral position) (designGuidesOf design)
     }
   )
@@ -75,7 +80,8 @@ addRelative offset (G ref) dep design@(LayoutDesign { designGuidesOf = guides })
     { designPlasticityOf =
         set (gid, gid) 1 . set (gid, ref) 1 . symRelat $ designPlasticityOf design
     , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
-    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
+    , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) pos guides
     }
   )
@@ -95,7 +101,8 @@ addBetween (G ref1, pct1) (G ref2, pct2) design@(LayoutDesign { designGuidesOf =
         -- yes the indicies are supposed to mismatch in this
         set (gid, gid) 1 . set (gid, ref1) pct2 . set (gid, ref2) pct1 $
           designElasticityOf design
-    , designConstraintsOf = expandTo (gid, gid) (designConstraintsOf design)
+    , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
+    , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) pos guides
     }
   )
@@ -109,11 +116,33 @@ nextGuideNumberFor (LayoutDesign { designGuidesOf = guides }) =
   (+1) . fst $ dims guides
 
 
+data Constraint = LTE | GTE
+  deriving (Eq, Show)
+
+addGuideConstraint :: GuideID -> Constraint -> GuideID -> LayoutDesign -> LayoutDesign
+addGuideConstraint (G forGuide) constraint (G ofGuide) design =
+  case constraint of
+    LTE ->
+      design
+      { designLTEConstraintsOf =
+          set (forGuide, forGuide) 1
+          . set (forGuide, ofGuide) (-1)
+          $ designLTEConstraintsOf design
+      }
+    GTE ->
+      design
+      { designGTEConstraintsOf =
+          set (forGuide, forGuide) 1
+          . set (forGuide, ofGuide) (-1)
+          $ designGTEConstraintsOf design
+      }
+
+
 data Layout
   = Layout
-    { layoutPlasticityOf :: Matrix Double
-    , layoutElasticityOf :: Matrix Double
-    , layoutConstraintsOf :: Matrix Double
+    { layoutDesignOf :: LayoutDesign
+    , layoutLTEConstraintsOf :: Matrix Double
+    , layoutGTEConstraintsOf :: Matrix Double
     , layoutTransformationOf :: Matrix Double
     , layoutGuidesOf :: Matrix Double
     }
@@ -137,23 +166,18 @@ propagate m =
 build :: LayoutDesign -> Layout
 build design =
   Layout
-  { layoutPlasticityOf = designPlasticityOf design
-  , layoutElasticityOf = designElasticityOf design
-  , layoutConstraintsOf = designConstraintsOf design
-  , layoutTransformationOf =
-      propagate (designPlasticityOf design)
-      `mul` designElasticityOf design
+  { layoutDesignOf = design
+  , layoutLTEConstraintsOf = propagated `mul` designLTEConstraintsOf design
+  , layoutGTEConstraintsOf = propagated `mul` designGTEConstraintsOf design
+  , layoutTransformationOf = propagated `mul` designElasticityOf design
   , layoutGuidesOf = designGuidesOf design
   }
+  where
+    propagated = propagate (designPlasticityOf design)
 
 design :: Layout -> LayoutDesign
 design layout =
-  LayoutDesign
-  { designPlasticityOf = layoutPlasticityOf layout
-  , designElasticityOf = layoutElasticityOf layout
-  , designConstraintsOf = layoutConstraintsOf layout
-  , designGuidesOf = layoutGuidesOf layout
-  }
+  (layoutDesignOf layout) { designGuidesOf = layoutGuidesOf layout }
 
 getGuide :: GuideID -> Layout -> Int
 getGuide (G gid) = floor . get (gid, 1) . layoutGuidesOf
@@ -162,28 +186,27 @@ getGuides :: [GuideID] -> Layout -> [Int]
 getGuides gs layout = map (`getGuide` layout) gs
 
 reactToChange :: GuideID -> Int -> Layout -> Layout
-reactToChange (G gid) amt l@(Layout { layoutTransformationOf = t, layoutGuidesOf = g }) =
-  l { layoutGuidesOf = add g (t `mul` changes) }
-  where
-    changes = matrix (dims g) [((gid, 1), fromIntegral amt)]
+reactToChange (G gid) amt layout =
+  doReactToChanges [((gid, 1), fromIntegral amt)] layout
 
 reactToChanges :: [(GuideID, Int)] -> Layout -> Layout
-reactToChanges pairs l@(Layout { layoutTransformationOf = t, layoutGuidesOf = g }) =
-  l { layoutGuidesOf = add g (t `mul` changes) }
+reactToChanges pairs layout =
+  let convert (G gid, amt) = ((gid, 1), fromIntegral amt)
+  in doReactToChanges (map convert pairs) layout
+
+doReactToChanges :: [(Pos, Double)] -> Layout -> Layout
+doReactToChanges entries layout =
+  layout { layoutGuidesOf = adjusted }
   where
-    convert (G gid, amt) = ((gid, 1), fromIntegral amt)
-    changes = matrix (dims g) (map convert pairs)
-
-
-
--- constraints:
--- x <= y
--- x >= y
---
--- if x <= y then y-x will be >= 0
--- if x >= y then x-y will be >= 0
---
--- don't think this can be done w/ a matrix, since each pair has to be done independently
--- unless there's just a single constraint max for each guide
--- and adjustments are not cumulative, but the max (negative) number
+    Layout
+      { layoutLTEConstraintsOf = lte
+      , layoutGTEConstraintsOf = gte
+      , layoutTransformationOf = t
+      , layoutGuidesOf = g
+      } = layout
+    changes = matrix (dims g) entries
+    changed = t `mul` changes `add` g
+    adjusted = changed
+      `sub` (Matrix.filter (> 0) $ lte `mul` changed)
+      `sub` (Matrix.filter (< 0) $ gte `mul` changed)
 

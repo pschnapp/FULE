@@ -91,32 +91,36 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
       SizedTop -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { topOf = g }
+        , getUnconOuterOf = bottomOf
         , setSizedInnerOf = \g b -> b { bottomOf = g }
-        , setSizedOuterOf = topOf
+        , getSizedOuterOf = topOf
         , multiplierOf = 1
         , orientationOf = Horizontal
         }
       SizedLeft -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { leftOf = g }
+        , getUnconOuterOf = rightOf
         , setSizedInnerOf = \g b -> b { rightOf = g }
-        , setSizedOuterOf = leftOf
+        , getSizedOuterOf = leftOf
         , multiplierOf = 1
         , orientationOf = Vertical
         }
       SizedRight -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { rightOf = g }
+        , getUnconOuterOf = leftOf
         , setSizedInnerOf = \g b -> b { leftOf = g }
-        , setSizedOuterOf = rightOf
+        , getSizedOuterOf = rightOf
         , multiplierOf = -1
         , orientationOf = Vertical
         }
       SizedBottom -> makeDivided divided proxy bounds renderGroup
         DivisionConfig
         { setUnconInnerOf = \g b -> b { bottomOf = g }
+        , getUnconOuterOf = topOf
         , setSizedInnerOf = \g b -> b { topOf = g }
-        , setSizedOuterOf = bottomOf
+        , getSizedOuterOf = bottomOf
         , multiplierOf = -1
         , orientationOf = Horizontal
         }
@@ -125,8 +129,9 @@ instance (Container s b m, Container u b m) => Container (Divided s b u) b m whe
 data DivisionConfig
   = DivisionConfig
     { setUnconInnerOf :: GuideID -> Bounds -> Bounds
+    , getUnconOuterOf :: Bounds -> GuideID
     , setSizedInnerOf :: GuideID -> Bounds -> Bounds
-    , setSizedOuterOf :: Bounds -> GuideID
+    , getSizedOuterOf :: Bounds -> GuideID
     , multiplierOf :: Int
     , orientationOf :: Orientation
     }
@@ -151,6 +156,8 @@ makeDivided divided proxy bounds renderGroup config = do
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
       let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
       addComponent $ ComponentInfo barBounds (genBar orientation sizedInner) renderGroup
+      addConstraintToLayout (barUncon) unconConstraint (getUnconOuter bounds)
+      addConstraintToLayout (sizedInner) sizedConstraint (getSizedOuter bounds)
       return barUncon
     Static -> return sizedInner
   -- unconstrained
@@ -164,11 +171,13 @@ makeDivided divided proxy bounds renderGroup config = do
       } = divided
     DivisionConfig
       { setUnconInnerOf = setUnconInner
+      , getUnconOuterOf = getUnconOuter
       , setSizedInnerOf = setSizedInner
-      , setSizedOuterOf = getSizedOuter
+      , getSizedOuterOf = getSizedOuter
       , multiplierOf = m
       , orientationOf = orientation
       } = config
+    (unconConstraint, sizedConstraint) = if m == 1 then (LTE, GTE) else (GTE, LTE)
 
 
 sizedTop :: Size -> Dynamics b -> s -> u -> Divided s b u

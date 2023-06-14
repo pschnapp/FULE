@@ -8,6 +8,7 @@ module FULE.Container
  , LayoutOp
  , runLayoutOp
  , addGuideToLayout
+ , addConstraintToLayout
  , nextRenderGroup
  , addComponent
  ) where
@@ -38,6 +39,12 @@ addGuideToLayout r = do
   let (guideID, builder) = addGuide r (builderOf state)
   put state { builderOf = builder }
   return guideID
+
+addConstraintToLayout :: (Monad m) => GuideID -> Constraint -> GuideID -> LayoutOp k m ()
+addConstraintToLayout forGuide constraint ofGuide = do
+  state <- get
+  let builder = addGuideConstraint forGuide constraint ofGuide (builderOf state)
+  put state { builderOf = builder }
 
 nextRenderGroup :: (Monad m) => LayoutOp k m Int
 nextRenderGroup = do

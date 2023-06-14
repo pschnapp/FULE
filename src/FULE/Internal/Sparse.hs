@@ -10,6 +10,7 @@ module FULE.Internal.Sparse
  , del
  , count
  , add
+ , sub
  , mul
  , filter
  ) where
@@ -69,6 +70,9 @@ count = Map.size . matrixOf
 
 add :: (Num a) => Matrix a -> Matrix a -> Matrix a
 add (M dl ml) (M dr mr) = M (maxp dl dr) $ Map.unionWith (+) ml mr
+
+sub :: (Num a) => Matrix a -> Matrix a -> Matrix a
+sub (M dl ml) (M dr mr) = M (maxp dl dr) $ Map.unionWith (-) ml mr
 
 mul :: (Num a) => Matrix a -> Matrix a -> Matrix a
 mul (M (r, _) ml) (M (_, c) mr) =

@@ -12,8 +12,8 @@ module FULE.Container.Divided
  , sizedRight
  , sizedBottom
  , Size
- , sizeTo
- , sizeToContents
+ , sizedTo
+ , sizedToContents
  ) where
 
 import Control.Applicative
@@ -30,11 +30,11 @@ import FULE.Orientation
 
 type Size = Maybe Int
 
-sizeTo :: Int -> Size
-sizeTo = Just
+sizedTo :: Int -> Size
+sizedTo = Just
 
-sizeToContents :: Size
-sizeToContents = Nothing
+sizedToContents :: Size
+sizedToContents = Nothing
 
 
 data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom

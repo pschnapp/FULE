@@ -32,7 +32,7 @@ runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [ComponentInfo k
 runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
 
-addGuideToLayout :: (Monad m) => Relationship -> LayoutOp k m GuideID
+addGuideToLayout :: (Monad m) => Positioning -> LayoutOp k m GuideID
 addGuideToLayout r = do
   state <- get
   let (guideID, builder) = addGuide r (builderOf state)

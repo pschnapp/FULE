@@ -1,7 +1,7 @@
 module FULE.Layout
  ( GuideID
  , DependencyType(..)
- , Relationship(..)
+ , Positioning(..)
  , LayoutDesign
  , makeDesign
  , addGuide
@@ -25,7 +25,7 @@ data DependencyType = Asymmetric | Symmetric
   deriving (Show)
 
 
-data Relationship
+data Positioning
   = Absolute
     { positionOf :: Int
     }
@@ -50,7 +50,7 @@ type LayoutDesignOp = LayoutDesign -> (GuideID, LayoutDesign)
 makeDesign :: LayoutDesign
 makeDesign = LayoutDesign empty empty empty empty
 
-addGuide :: Relationship -> LayoutDesignOp
+addGuide :: Positioning -> LayoutDesignOp
 addGuide (Absolute pos) = addAbsolute pos
 addGuide (Relative offset gid dep) = addRelative offset gid dep 
 addGuide (Between r1 r2) = addBetween r1 r2

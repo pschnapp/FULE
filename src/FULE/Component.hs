@@ -16,11 +16,12 @@ import FULE.Layout
 
 class (Monad m) => Component k m where
   requiredWidth :: k -> m (Maybe Int)
+  requiredWidth _ = return Nothing
+
   requiredHeight :: k -> m (Maybe Int)
+  requiredHeight _ = return Nothing
 
 instance {-# OVERLAPPABLE #-} (Monad m) => Component k m where
-  requiredWidth _ = return Nothing
-  requiredHeight _ = return Nothing
 
 
 data ComponentInfo k

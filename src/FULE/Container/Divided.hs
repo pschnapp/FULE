@@ -156,8 +156,8 @@ makeDivided divided proxy bounds renderGroup config = do
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
       let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
       addComponent $ ComponentInfo barBounds (genBar orientation sizedInner) renderGroup
-      addConstraintToLayout (barUncon) unconConstraint (getUnconOuter bounds)
-      addConstraintToLayout (sizedInner) sizedConstraint (getSizedOuter bounds)
+      addConstraintToLayout barUncon unconConstraint (getUnconOuter bounds)
+      addConstraintToLayout sizedInner sizedConstraint (getSizedOuter bounds)
       return barUncon
     Static -> return sizedInner
   -- unconstrained

@@ -186,13 +186,13 @@ getGuides :: [GuideID] -> Layout -> [Int]
 getGuides gs layout = map (`getGuide` layout) gs
 
 reactToChange :: GuideID -> Int -> Layout -> Layout
-reactToChange (G gid) amt layout =
-  doReactToChanges [((gid, 1), fromIntegral amt)] layout
+reactToChange (G gid) amt =
+  doReactToChanges [((gid, 1), fromIntegral amt)]
 
 reactToChanges :: [(GuideID, Int)] -> Layout -> Layout
-reactToChanges pairs layout =
+reactToChanges pairs =
   let convert (G gid, amt) = ((gid, 1), fromIntegral amt)
-  in doReactToChanges (map convert pairs) layout
+  in doReactToChanges (map convert pairs)
 
 doReactToChanges :: [(Pos, Double)] -> Layout -> Layout
 doReactToChanges entries layout =
@@ -207,6 +207,6 @@ doReactToChanges entries layout =
     changes = matrix (dims g) entries
     changed = t `mul` changes `add` g
     adjusted = changed
-      `sub` (Matrix.filter (> 0) $ lte `mul` changed)
-      `sub` (Matrix.filter (< 0) $ gte `mul` changed)
+      `sub` Matrix.filter (> 0) (lte `mul` changed)
+      `sub` Matrix.filter (< 0) (gte `mul` changed)
 

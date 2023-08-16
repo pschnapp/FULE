@@ -30,17 +30,19 @@ data LayoutOpState
 type LayoutOp k m = StateT LayoutOpState (WriterT [ComponentInfo k] m)
 
 runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [ComponentInfo k])
-runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeDesign 0)
+runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeLayoutDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
 
-addGuideToLayout :: (Monad m) => Positioning -> LayoutOp k m GuideID
+addGuideToLayout :: (Monad m) => GuideSpecification -> LayoutOp k m GuideID
 addGuideToLayout r = do
   state <- get
   let (guideID, builder) = addGuide r (builderOf state)
   put state { builderOf = builder }
   return guideID
 
-addConstraintToLayout :: (Monad m) => GuideID -> Constraint -> GuideID -> LayoutOp k m ()
+addConstraintToLayout
+  :: (Monad m)
+  => GuideID -> GuideConstraintType -> GuideID -> LayoutOp k m ()
 addConstraintToLayout forGuide constraint ofGuide = do
   state <- get
   let builder = addGuideConstraint forGuide constraint ofGuide (builderOf state)
@@ -57,8 +59,8 @@ addComponent :: (MonadWriter [a] m) => a -> m ()
 addComponent p = tell [p]
 
 
+-- sadly the `Proxy` has to be used for the heterogenous collections to work
 class (Monad m) => Container c k m where
-  -- sadly the `Proxy` has to be used for the heterogenous collections to work
   minWidth :: c -> Proxy k -> m (Maybe Int)
   minHeight :: c -> Proxy k -> m (Maybe Int)
   addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()

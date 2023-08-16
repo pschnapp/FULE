@@ -155,9 +155,9 @@ makeDivided divided proxy bounds renderGroup config = do
       barUncon <- addGuideToLayout $ Relative (m * barSize) sizedInner Symmetric
       -- yes the 'sized' and 'unconstrained' are supposed to be mixed here:
       let barBounds = setSizedInner barUncon . setUnconInner sizedInner $ bounds
-      addComponent $ ComponentInfo barBounds (genBar orientation sizedInner) renderGroup
-      addConstraintToLayout barUncon unconConstraint (getUnconOuter bounds)
-      addConstraintToLayout sizedInner sizedConstraint (getSizedOuter bounds)
+      addToLayout (genBar orientation sizedInner) proxy barBounds renderGroup
+      addGuideConstraintToLayout barUncon unconConstraint (getUnconOuter bounds)
+      addGuideConstraintToLayout sizedInner sizedConstraint (getSizedOuter bounds)
       return barUncon
     Static -> return sizedInner
   -- unconstrained

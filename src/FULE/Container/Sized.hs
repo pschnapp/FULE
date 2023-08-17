@@ -11,6 +11,10 @@ module FULE.Container.Sized
 import FULE.Container
 
 
+-- | A container which specifies or overrides the size of content in the layout.
+--
+--   To /remove/ the size of the content see the
+--  'FULE.Container.Unreckoned.Unreckoned' container.
 data Sized c
   = Sized
     { widthOf :: Maybe Int
@@ -23,12 +27,25 @@ instance (Container c k m) => Container (Sized c) k m where
   minHeight sized _ = return (heightOf sized)
   addToLayout (Sized _ _ c) = addToLayout c
 
-sizedHoriz :: Int -> c -> Sized c
+-- | Add a horizontal size to the content.
+sizedHoriz
+  :: Int -- ^ The width the content should have.
+  -> c -- ^ The content.
+  -> Sized c
 sizedHoriz width = Sized (Just $ max 0 width) Nothing
 
-sizedVert :: Int -> c -> Sized c
+-- | Add a vertical size to the content.
+sizedVert
+  :: Int -- ^ The height the content should have.
+  -> c -- ^ The content.
+  -> Sized c
 sizedVert height = Sized Nothing (Just $ max 0 height)
 
-sized :: Int -> Int -> c -> Sized c
+-- | Add a size to the content in both dimensions.
+sized
+  :: Int -- ^ The width the content should have.
+  -> Int -- ^ The height the content should have.
+  -> c -- ^ The content.
+  -> Sized c
 sized width height = Sized (Just $ max 0 width) (Just $ max 0 height)
 

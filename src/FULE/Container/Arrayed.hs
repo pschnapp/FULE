@@ -7,9 +7,6 @@ module FULE.Container.Arrayed
  , Arrayed
  , arrayedHoriz
  , arrayedVert
- , Padding
- , padding
- , noPadding
  ) where
 
 import Control.Monad
@@ -27,6 +24,8 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
+-- | An array (horizontal or vertical) of visual 'FULE.Container.Item.ItemM's
+--   in a layout.
 data ArrayedM m k
   = Arrayed
     { horizPaddingOf :: Int
@@ -35,6 +34,7 @@ data ArrayedM m k
     , itemsOf :: [ItemM m k]
     }
 
+-- | Like 'ArrayedM' but run in the 'Data.Functor.Identity.Identity' monad.
 type Arrayed = ArrayedM Identity
 
 -- NOTE: no padding is added when there are no items to display
@@ -93,9 +93,15 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
       bottom <- addGuideToLayout $ Relative height boundingGuide Asymmetric
       return (Bounds boundingGuide alignmentGuide right bottom)
 
+-- | Array 'FULE.Container.Item.ItemM's horizontally with the specified padding.
+--
+--   Padding is added between the elements and around the perimeter of the array.
 arrayedHoriz :: Padding -> [ItemM m k] -> ArrayedM m k
 arrayedHoriz padding = arrayed padding Horizontal
 
+-- | Array 'FULE.Container.Item.ItemM's vertically with the specified padding.
+--
+--   Padding is added between the elements and around the perimeter of the array.
 arrayedVert :: Padding -> [ItemM m k] -> ArrayedM m k
 arrayedVert padding = arrayed padding Vertical
 

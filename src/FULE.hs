@@ -1,5 +1,6 @@
 module FULE
- ( module FULE.Component
+ ( module FULE.Common
+ , module FULE.Component
  , module FULE.Container
  , module FULE.Container.Arrayed
  , module FULE.Container.Divided
@@ -11,9 +12,9 @@ module FULE
  , module FULE.Container.Sized
  , module FULE.Container.Window
  , module FULE.Layout
- , module FULE.Orientation
  ) where
 
+import FULE.Common
 import FULE.Component
 import FULE.Container
 import FULE.Container.Arrayed
@@ -26,5 +27,4 @@ import FULE.Container.Positioned
 import FULE.Container.Sized
 import FULE.Container.Window
 import FULE.Layout
-import FULE.Orientation
 

@@ -19,21 +19,12 @@ import Data.Functor.Identity
 import Data.Maybe
 import Data.Proxy
 
+import FULE.Common
 import FULE.Component
 import FULE.Container
 import FULE.Container.Item
 import FULE.Internal.Util
 import FULE.Layout
-import FULE.Orientation
-
-
-type Padding = (Int, Int)
-
-padding :: Int -> Int -> Padding
-padding horiz vert = (horiz, vert)
-
-noPadding :: Padding
-noPadding = (0, 0)
 
 
 data ArrayedM m k

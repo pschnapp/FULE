@@ -21,23 +21,11 @@ import Control.Monad.Trans.Class
 import Data.Maybe
 import Data.Proxy
 
+import FULE.Common
 import FULE.Component
 import FULE.Container
 import FULE.Internal.Util
 import FULE.Layout
-import FULE.Orientation
-
-
--- | The size that the sized content of a container should have.
-type SizedContentSize a = Maybe a
-
--- | Use a set size for the sized content of a container.
-sizedTo :: a -> SizedContentSize a
-sizedTo = Just
-
--- | Use the inherent size of the content for the sized portion of a container.
-sizedToContents :: SizedContentSize a
-sizedToContents = Nothing
 
 
 data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom

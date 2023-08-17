@@ -11,10 +11,10 @@ module FULE.Container.Overflow
 import Control.Monad.Trans.Class
 import Data.Maybe
 
+import FULE.Common
 import FULE.Component
 import FULE.Container
 import FULE.Layout
-import FULE.Orientation
 
 
 data Overflow c = Overflow (Maybe Orientation) c

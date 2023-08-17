@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       FULE
+      FULE.Common
       FULE.Component
       FULE.Container
       FULE.Container.Arrayed
@@ -40,7 +41,6 @@ library
       FULE.Internal.Sparse
       FULE.Internal.Util
       FULE.Layout
-      FULE.Orientation
   other-modules:
       Paths_FULE
   hs-source-dirs:

@@ -7,9 +7,9 @@ module FULE
  , module FULE.Container.Grid
  , module FULE.Container.Item
  , module FULE.Container.Layered
- , module FULE.Container.Overflow
  , module FULE.Container.Positioned
  , module FULE.Container.Sized
+ , module FULE.Container.Unreckoned
  , module FULE.Container.Window
  , module FULE.Layout
  ) where
@@ -22,9 +22,9 @@ import FULE.Container.Divided
 import FULE.Container.Grid
 import FULE.Container.Item
 import FULE.Container.Layered
-import FULE.Container.Overflow
 import FULE.Container.Positioned
 import FULE.Container.Sized
+import FULE.Container.Unreckoned
 import FULE.Container.Window
 import FULE.Layout
 

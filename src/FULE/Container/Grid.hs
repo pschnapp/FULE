@@ -16,6 +16,7 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
+-- | A grid of visual 'FULE.Container.Item.ItemM's.
 data GridM m k
   = Grid
     { rowCountOf :: Int
@@ -23,6 +24,7 @@ data GridM m k
     , itemsOf :: [ItemM m k]
     }
 
+-- | Like 'GridM' but run in the 'Data.Functor.Identity.Identity' monad.
 type Grid = GridM Identity
 
 instance (Monad m) => Container (GridM m k) k m where
@@ -47,6 +49,21 @@ instance (Monad m) => Container (GridM m k) k m where
 percents :: Int -> [Double]
 percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]
 
-grid :: Int -> Int -> [ItemM m k] -> GridM m k
+-- | Create a 'GridM' of 'FULE.Container.Item.ItemM's.
+grid
+  :: Int -- ^ The number of rows the 'GridM' should have.
+  -> Int -- ^ The number of columns the 'GridM' should have.
+  -> [ItemM m k]
+  -- ^ The 'FULE.Container.Item.ItemM's to put in the 'GridM'.
+  --
+  --   Placement of the 'FULE.Container.Item.ItemM's will start with the top,
+  --   left position of the 'GridM' and proceed to the right, wrapping around
+  --   to the next row when the end of the previous row has been reached.
+  --
+  --   If the number of elements in the list passed as an argument to this
+  --   parameter does not meet or exceeds the number of 'GridM' locations
+  --   available, then up-to the number of 'GridM' locations will be filled, but
+  --   no more than that.
+  -> GridM m k
 grid rows cols = Grid (max 0 rows) (max 0 cols)
 

@@ -18,13 +18,13 @@ import FULE.Layout
 
 
 -- | A container complementary to 'FULE.Container.Sized.Sized': whereas @Sized@
---   specifies a size for content which may or may not already have it,
+--   specifies a size for content which may or may not already have one,
 --   @Unreckoned@ /removes/ the size associated with content as it is reckoned
 --   in the layout. This allows for content to overflow its bounds as far as the
 --   layout is concerned.
 --
 --   The 'FULE.Component.Bounds' of a 'FULE.Component.Component' which is
---   @Unreckoned@ will match the overflowed content in the layout output.
+--   @Unreckoned@ will match the overflowing content size in the layout output.
 data Unreckoned c = Unreckoned (Maybe Orientation) c
 
 instance (Container c k m) => Container (Unreckoned c) k m where

@@ -34,6 +34,7 @@ library
       FULE.Container.Grid
       FULE.Container.Item
       FULE.Container.Layered
+      FULE.Container.Padded
       FULE.Container.Positioned
       FULE.Container.Sized
       FULE.Container.Unreckoned

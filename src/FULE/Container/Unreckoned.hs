@@ -43,7 +43,7 @@ instance (Container c k m) => Container (Unreckoned c) k m where
     let bounds = Bounds t l right bottom
     addToLayout c proxy bounds renderGroup
 
--- | Remove the horizontal size of content.
+-- | Remove the horizontal size of the content.
 unreckonedHoriz :: c -> Unreckoned c
 unreckonedHoriz = Unreckoned (Just Horizontal)
 

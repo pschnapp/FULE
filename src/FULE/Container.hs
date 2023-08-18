@@ -57,7 +57,8 @@ addGuideConstraintToLayout forGuide constraint ofGuide = do
   let builder = addGuideConstraint forGuide constraint ofGuide (builderOf state)
   put state { builderOf = builder }
 
--- | Get the next available render group from the 'LayoutOp' state.
+-- | Get the next available render group from the 'LayoutOp' state and advance
+--   to the next one internally.
 nextRenderGroup :: (Monad m) => LayoutOp k m Int
 nextRenderGroup = do
   state <- get

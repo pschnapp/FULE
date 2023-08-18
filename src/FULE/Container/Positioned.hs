@@ -35,7 +35,7 @@ data Position
 
 -- | A container for positioning content within a larger container in one of
 --   nine positions relative to the parent. Relative positioning will adjust
---   to changes in the size of the parent container.
+--   to keep up with changes to the size of the parent container.
 data Positioned c = Positioned Position c
 
 instance (Container c k m) => Container (Positioned c) k m where

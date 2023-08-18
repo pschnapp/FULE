@@ -2,7 +2,7 @@
 
 module FULE.Container.Window
  ( Window
- , WindowControlGen
+ , WindowAdjustorGen
  , window
  , layout
  , layoutM
@@ -17,23 +17,47 @@ import FULE.Container
 import FULE.Layout
 
 
-type WindowControlGen k = (GuideID, Int) -> (GuideID, Int) -> k
+-- | Type of a function used to generate a 'FULE.Component.Component' to adjust
+--   the 'FULE.Layout.Layout' in response to a change in the window size. The
+--   @Component@ should use the Guides passed as arguments to this function to
+--   update the @Layout@.
+type WindowAdjustorGen k
+  =  GuideID
+  -- ^ The Guide to use to adjust the /width/ of the 'FULE.Layout' in response
+  --   to a change in the window size.
+  -> GuideID
+  -- ^ The Guide to use to adjust the /height/ of the 'FULE.Layout' in response
+  --   to a change in the window size.
+  -> k
 
+-- | The base container of any (non-custom) 'FULE.Layout.Layout' representing
+--   the window of the encompassing GUI framework. It is the only container that
+--   can be used with the 'layout' and 'layoutM' functions to build a @Layout@.
 data Window c k
   = Window
     { widthOf :: Int
     , heightOf :: Int
-    , controlGenOf :: WindowControlGen k
+    , controlGenOf :: WindowAdjustorGen k
     , contentsOf :: c
     }
 
-window :: Int -> Int -> WindowControlGen k -> c -> Window c k
+-- | Create a 'Window'.
+window
+  :: Int -- ^ The width of the window.
+  -> Int -- ^ The height of the window.
+  -> WindowAdjustorGen k
+  -- ^ A function to construct a 'FULE.Component.Component' for reacting to
+  --   changes in the size of the window of the encompassing framework.
+  -> c -- ^ The content of the window.
+  -> Window c k
 window width height = Window (max 0 width) (max 0 height)
 
 
+-- | Build a layout for a 'Window' in the 'Data.Functor.Identity.Identity' monad.
 layout :: (Container c k Identity) => Window c k -> (Layout, [ComponentInfo k])
 layout = first build . runIdentity . runLayoutOp . makeLayoutOp
 
+-- | Build a layout for a 'Window' in the specified monad @m@.
 layoutM :: (Container c k m) => Window c k -> m (Layout, [ComponentInfo k])
 layoutM = (first build <$>) . runLayoutOp . makeLayoutOp
 
@@ -45,6 +69,6 @@ makeLayoutOp (Window w h gen c) = do
   bottom <- addGuideToLayout $ Absolute h
   let bounds = Bounds top left right bottom
   let proxy = Proxy :: Proxy k
-  addToLayout (gen (right, w) (bottom, h)) proxy bounds Nothing
+  addToLayout (gen right bottom) proxy bounds Nothing
   addToLayout c proxy bounds Nothing
 

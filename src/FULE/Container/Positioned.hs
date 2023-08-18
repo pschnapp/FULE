@@ -7,7 +7,6 @@ module FULE.Container.Positioned
  , topMiddle
  , topRight
  , middleLeft
- , middleMiddle
  , centered
  , middleRight
  , bottomLeft
@@ -34,6 +33,9 @@ data Position
   | BottomMiddle
   | BottomRight
 
+-- | A container for positioning content within a larger container in one of
+--   nine positions relative to the parent. Relative positioning will adjust
+--   to changes in the size of the parent container.
 data Positioned c = Positioned Position c
 
 instance (Container c k m) => Container (Positioned c) k m where
@@ -124,33 +126,39 @@ adhereRight (Bounds { rightOf = right }) (Just w) = do
 makeBounds (top, bottom) (left, right) =
   Bounds { topOf = top, leftOf = left, rightOf = right, bottomOf = bottom }
 
+-- | Position content in the /top-left/ corner of its parent container.
 topLeft :: c -> Positioned c
 topLeft = Positioned TopLeft
 
+-- | Position content in the middle of the /top/ side of its parent container.
 topMiddle :: c -> Positioned c
 topMiddle = Positioned TopMiddle
 
+-- | Position content in the /top-right/ corner of its parent container.
 topRight :: c -> Positioned c
 topRight = Positioned TopRight
 
+-- | Position content in the middle of the /left/ side of its parent container.
 middleLeft :: c -> Positioned c
 middleLeft = Positioned MiddleLeft
 
-middleMiddle :: c -> Positioned c
-middleMiddle = Positioned MiddleMiddle
-
+-- | Position content in the very center of its parent container.
 centered :: c -> Positioned c
-centered = middleMiddle
+centered = Positioned MiddleMiddle
 
+-- | Position content in the middle of the /right/ side of its parent container.
 middleRight :: c -> Positioned c
 middleRight = Positioned MiddleRight
 
+-- | Position content in the /bottom-left/ corner of its parent container.
 bottomLeft :: c -> Positioned c
 bottomLeft = Positioned BottomLeft
 
+-- | Position content in the middle of the /bottom/ side of its parent container.
 bottomMiddle :: c -> Positioned c
 bottomMiddle = Positioned BottomMiddle
 
+-- | Position content in the /bottom-right/ corner of its parent container.
 bottomRight :: c -> Positioned c
 bottomRight = Positioned BottomRight
 

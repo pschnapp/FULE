@@ -18,8 +18,9 @@ import FULE.Internal.Util
 -- | This container layers multiple visual 'FULE.Container.Item.ItemM's within
 --   the same bounding rectangle, one on top of the other. Z-ordering is not
 --   really taken into account since that depends on how you are using the
---   layout output, but the @ItemM@s will appear in the output in the same order
---   they're in when passed to the 'layered' function.
+--   layout output, but the @ItemM@s will appear in the output of
+--   'FULE.Container.runLayoutOp' in the same order they're in when passed to
+--   the 'layered' function.
 newtype LayeredM m k = Layered [ItemM m k]
 
 -- | Like 'LayeredM' but run in the 'Data.Functor.Identity.Identity' monad.

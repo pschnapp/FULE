@@ -11,9 +11,6 @@ module FULE.Container.Divided
  , sizedLeft
  , sizedRight
  , sizedBottom
- , SizedContentSize
- , sizedTo
- , sizedToContents
  ) where
 
 import Control.Applicative
@@ -31,8 +28,8 @@ import FULE.Layout
 data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom
 
 
--- | A function to produce a 'FULE.Component.Component' for controlling the
---   resize bar.
+-- | Type of a function to produce a 'FULE.Component.Component' for controlling
+--   the resize bar, thus leaving the mechanics and presentation up to you.
 type BarControlGen b
   = Orientation
   -- ^ The orientation of the resize bar; a @Horizontal@ orientation would call
@@ -56,8 +53,14 @@ barSizeFor :: Dynamics b -> Maybe Int
 barSizeFor (Dynamic _ s) = Just s
 barSizeFor Static = Nothing
 
--- | Use a dynamic sizing with a resize bar for the sized portion of the container.
-dynamic :: BarControlGen b -> Int -> Dynamics b
+-- | Use a dynamic sizing, with a resize bar, for the sized portion of the
+--   container.
+dynamic
+  :: BarControlGen b
+  -- ^ A function to generate a @Component@ to use for the resize bar.
+  -> Int
+  -- ^ The thickness of the resize bar @Component@ in the direction of travel.
+  -> Dynamics b
 dynamic genBar size = Dynamic genBar (max 0 size)
 
 -- | Use a static size for the sized portion of the container.
@@ -70,7 +73,8 @@ static = Static
 --   resizing dynamically.
 --
 --   When configured to be resizable, the resize bar's size is not included in
---   the size of the sized content during layout.
+--   the size of the sized content during layout but is treated as an additional
+--   size to be considered.
 data Divided s b u
   = Divided
     { sizedSideOf :: SizedSide
@@ -191,7 +195,7 @@ makeDivided divided proxy bounds renderGroup config = do
     (unconConstraint, sizedConstraint) = if m == 1 then (LTE, GTE) else (GTE, LTE)
 
 
--- | Create a 'Divided' container with a sized top.
+-- | Create a 'Divided' container with the top portion having a particular size.
 sizedTop
   :: SizedContentSize Int -- ^ The size of the sized content.
   -> Dynamics b -- ^ The dynamics of the @Divided@ container.
@@ -200,7 +204,7 @@ sizedTop
   -> Divided s b u
 sizedTop = Divided SizedTop . fmap (max 0)
 
--- | Create a 'Divided' container with a sized left side.
+-- | Create a 'Divided' container with the left portion having a particular size.
 sizedLeft
   :: SizedContentSize Int -- ^ The size of the sized content.
   -> Dynamics b -- ^ The dynamics of the @Divided@ container.
@@ -209,7 +213,7 @@ sizedLeft
   -> Divided s b u
 sizedLeft = Divided SizedLeft . fmap (max 0)
 
--- | Create a 'Divided' container with a sized right side.
+-- | Create a 'Divided' container with the right portion having a particular size.
 sizedRight
   :: SizedContentSize Int -- ^ The size of the sized content.
   -> Dynamics b -- ^ The dynamics of the @Divided@ container.
@@ -218,7 +222,7 @@ sizedRight
   -> Divided s b u
 sizedRight = Divided SizedRight . fmap (max 0)
 
--- | Create a 'Divided' container with a sized bottom.
+-- | Create a 'Divided' container with the bottom portion having a particular size.
 sizedBottom
   :: SizedContentSize Int -- ^ The size of the sized content.
   -> Dynamics b -- ^ The dynamics of the @Divided@ container.

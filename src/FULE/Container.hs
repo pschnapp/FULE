@@ -6,6 +6,7 @@
 module FULE.Container
  ( Container(..)
  , LayoutOp
+ , LayoutOpState
  , runLayoutOp
  , addGuideToLayout
  , addGuideConstraintToLayout
@@ -24,6 +25,7 @@ import FULE.Layout
 -- Layout Operation
 --------------------------------
 
+-- | Internal.
 data LayoutOpState
   = LOS
     { builderOf :: LayoutDesign
@@ -80,9 +82,9 @@ nextRenderGroup = do
 --   language extensions enabled to use this and you may wish to have your
 --   instance use the @{-# OVERLAPS #-}@ or @{-# OVERLAPPING #-}@ pragmas.
 class (Monad m) => Container c k m where
-  -- | Get the minimum /width/ required for display by the container @c@.
+  -- | Get the minimum /width/ required for display of the container @c@.
   minWidth :: c -> Proxy k -> m (Maybe Int)
-  -- | Get the minimum /height/ required for display by the container @c@.
+  -- | Get the minimum /height/ required for display of the container @c@.
   minHeight :: c -> Proxy k -> m (Maybe Int)
   -- | Add the container @c@ and its contents @k@ to a 'FULE.Layout.LayoutDesign'.
   addToLayout :: c -> Proxy k -> Bounds -> RenderGroup -> LayoutOp k m ()

@@ -13,8 +13,8 @@ import FULE.Container
 
 -- | A container which specifies or overrides the size of content in the layout.
 --
---   To /remove/ the size of the content see the
---  'FULE.Container.Unreckoned.Unreckoned' container.
+--   To /remove/ the size of content from consideration during layout process
+--   see the 'FULE.Container.Unreckoned.Unreckoned' container.
 data Sized c
   = Sized
     { widthOf :: Maybe Int

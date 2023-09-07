@@ -16,7 +16,7 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
--- | A grid of visual 'FULE.Container.Item.ItemM's.
+-- | A two-dimensional grid of visual 'FULE.Container.Item.ItemM's.
 data GridM m k
   = Grid
     { rowCountOf :: Int

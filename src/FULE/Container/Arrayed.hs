@@ -95,13 +95,19 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
 
 -- | Array 'FULE.Container.Item.ItemM's horizontally with the specified padding.
 --
---   Padding is added between the elements and around the perimeter of the array.
+--   Padding is added between the elements and around the perimeter of the array;
+--   the horizontal padding is added once between elements, and the same padding
+--   is used before and after the array -- thus the intra-element padding is not
+--   double the outside padding.
 arrayedHoriz :: Padding -> [ItemM m k] -> ArrayedM m k
 arrayedHoriz padding = arrayed padding Horizontal
 
 -- | Array 'FULE.Container.Item.ItemM's vertically with the specified padding.
 --
---   Padding is added between the elements and around the perimeter of the array.
+--   Padding is added between the elements and around the perimeter of the array;
+--   the vertical padding is added once between elements, and the same padding
+--   is used before and after the array -- thus the intra-element padding is not
+--   double the outside padding.
 arrayedVert :: Padding -> [ItemM m k] -> ArrayedM m k
 arrayedVert padding = arrayed padding Vertical
 

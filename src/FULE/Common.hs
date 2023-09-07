@@ -42,10 +42,11 @@ noPadding = (0, 0)
 -- Sized Content
 --------------------------------
 
--- | The size that the sized content of a container should have.
+-- | The size that the sized portion of a container should have;
+--   see the 'FULE.Container.Divided.Divided' container for an example use.
 type SizedContentSize a = Maybe a
 
--- | Use a set size for the sized content of a container.
+-- | Use a set size for the sized portion of a container.
 sizedTo :: a -> SizedContentSize a
 sizedTo = Just
 

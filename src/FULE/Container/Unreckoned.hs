@@ -19,12 +19,14 @@ import FULE.Layout
 
 -- | A container complementary to 'FULE.Container.Sized.Sized': whereas @Sized@
 --   specifies a size for content which may or may not already have one,
---   @Unreckoned@ /removes/ the size associated with content as it is reckoned
+--   @Unreckoned@ /removes/ size associated with content as it is reckoned
 --   in the layout. This allows for content to overflow its bounds as far as the
 --   layout is concerned.
 --
---   The 'FULE.Component.Bounds' of a 'FULE.Component.Component' which is
---   @Unreckoned@ will match the overflowing content size in the layout output.
+--   The 'FULE.Component.Bounds' in the 'FULE.Component.ComponentInfo' for a
+--   'FULE.Component.Component' which is @Unreckoned@ will match the overflowing
+--   size of the @Component@ even though the size was not taken into account
+--   during the layout process itself.
 data Unreckoned c = Unreckoned (Maybe Orientation) c
 
 instance (Container c k m) => Container (Unreckoned c) k m where
@@ -43,15 +45,15 @@ instance (Container c k m) => Container (Unreckoned c) k m where
     let bounds = Bounds t l right bottom
     addToLayout c proxy bounds renderGroup
 
--- | Remove the horizontal size of the content.
+-- | Elide the horizontal size of the content.
 unreckonedHoriz :: c -> Unreckoned c
 unreckonedHoriz = Unreckoned (Just Horizontal)
 
--- | Remove the verital size of the content.
+-- | Elide the verital size of the content.
 unreckonedVert :: c -> Unreckoned c
 unreckonedVert = Unreckoned (Just Vertical)
 
--- | Remove all sizes of the content.
+-- | Elide all sizes of the content.
 unreckoned :: c -> Unreckoned c
 unreckoned = Unreckoned Nothing
 

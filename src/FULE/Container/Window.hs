@@ -4,8 +4,8 @@ module FULE.Container.Window
  ( Window
  , WindowAdjustorGen
  , window
- , layout
  , layoutM
+ , layout
  ) where
 
 import Control.Arrow
@@ -17,10 +17,10 @@ import FULE.Container
 import FULE.Layout
 
 
--- | Type of a function used to generate a 'FULE.Component.Component' to adjust
---   the 'FULE.Layout.Layout' in response to a change in the window size. The
---   @Component@ should use the Guides passed as arguments to this function to
---   update the @Layout@.
+-- | Type of a function to produce a 'FULE.Component.Component' to adjust
+--   the 'FULE.Layout.Layout' in response to a change in the size of the window
+--   in the encompassing GUI framework. The @Component@ should use the Guides
+--   passed as arguments to this function to update the @Layout@.
 type WindowAdjustorGen k
   =  GuideID
   -- ^ The Guide to use to adjust the /width/ of the 'FULE.Layout' in response
@@ -31,7 +31,7 @@ type WindowAdjustorGen k
   -> k
 
 -- | The base container of any (non-custom) 'FULE.Layout.Layout' representing
---   the window of the encompassing GUI framework. It is the only container that
+--   the window in the encompassing GUI framework. It is the only container that
 --   can be used with the 'layout' and 'layoutM' functions to build a @Layout@.
 data Window c k
   = Window
@@ -47,19 +47,19 @@ window
   -> Int -- ^ The height of the window.
   -> WindowAdjustorGen k
   -- ^ A function to construct a 'FULE.Component.Component' for reacting to
-  --   changes in the size of the window of the encompassing framework.
+  --   changes in the size of the window in the encompassing GUI framework.
   -> c -- ^ The content of the window.
   -> Window c k
 window width height = Window (max 0 width) (max 0 height)
 
 
--- | Build a layout for a 'Window' in the 'Data.Functor.Identity.Identity' monad.
-layout :: (Container c k Identity) => Window c k -> (Layout, [ComponentInfo k])
-layout = first build . runIdentity . runLayoutOp . makeLayoutOp
-
 -- | Build a layout for a 'Window' in the specified monad @m@.
 layoutM :: (Container c k m) => Window c k -> m (Layout, [ComponentInfo k])
 layoutM = (first build <$>) . runLayoutOp . makeLayoutOp
+
+-- | Build a layout for a 'Window' in the 'Data.Functor.Identity.Identity' monad.
+layout :: (Container c k Identity) => Window c k -> (Layout, [ComponentInfo k])
+layout = first build . runIdentity . runLayoutOp . makeLayoutOp
 
 makeLayoutOp :: (Container c k m) => Window c k -> LayoutOp k m ()
 makeLayoutOp (Window w h gen c) = do

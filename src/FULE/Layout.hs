@@ -74,7 +74,7 @@ data GuideSpecification
     }
   | Relative -- ^ Add a new Guide with a plastic dependence on a reference Guide.
     { offsetOf :: Int
-    -- ^ The offset from the reference Guide the dependent Guide should have.
+    -- ^ The offset from the reference Guide the new dependent Guide should have.
     , dependencyOf :: GuideID
     -- ^ The ID of the reference Guide.
     , dependencyTypeOf :: PlasticDependencyType
@@ -86,13 +86,14 @@ data GuideSpecification
     --   Whenever one of the reference Guides moves the dependent Guide will be moved
     --   to remain positioned relatively between them.
     --
-    --   The @Double@ arguments of the pairs below should sum to equal @1.0@.
+    --   The @Double@ arguments of the pairs below should sum to equal @1.0@;
+    --   this will not be checked.
       (GuideID, Double)
       -- ^ A reference Guide and how close the dependent Guide should be to it
-      --   relative to the other reference as a percentage.
+      --   relative to the other reference, as a percentage.
       (GuideID, Double)
       -- ^ Another reference Guide and how close the dependent Guide should be
-      --   to it relative to the first reference as a percentage.
+      --   to it relative to the first reference, as a percentage.
 
 
 -- | Add a new Guide to a 'LayoutDesign' according to the given 'GuideSpecification'.
@@ -262,14 +263,15 @@ getGuides gs layout = map (`getGuide` layout) gs
 -- | Move a Guide within a 'Layout'.
 reactToChange
   :: GuideID -- ^ The Guide to move.
-  -> Int -- ^ The movement to apply to the Guide.
+  -> Int -- ^ The movement to apply to the Guide -- a delta.
   -> Layout -> Layout
 reactToChange (G gid) amt =
   doReactToChanges [((gid, 1), fromIntegral amt)]
 
 -- | Move multiple Guides within a 'Layout'.
 reactToChanges
-  :: [(GuideID, Int)] -- ^ A list of Guides with movements to apply to them.
+  :: [(GuideID, Int)]
+  -- ^ A list of Guides with movements (deltas) to apply to them.
   -> Layout -> Layout
 reactToChanges pairs =
   let convert (G gid, amt) = ((gid, 1), fromIntegral amt)

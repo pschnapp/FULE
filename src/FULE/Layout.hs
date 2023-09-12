@@ -19,6 +19,8 @@ module FULE.Layout
  , reactToChanges
  ) where
 
+import Control.DeepSeq
+
 import FULE.Internal.Sparse as Matrix
 
 
@@ -45,6 +47,10 @@ makeLayoutDesign = LayoutDesign empty empty empty empty empty
 -- | An identifier for a Guide in a 'Layout' or 'LayoutDesign'.
 newtype GuideID = G Int
   deriving (Eq, Show)
+
+instance NFData GuideID where
+  rnf g@(G i) = seq g . deepseq i $ ()
+
 
 -- | The type of a plastic dependency between two Guides.
 data PlasticDependencyType

@@ -11,6 +11,8 @@ module FULE.Component
  , boundingGuidesInCSSOrderFor
  ) where
 
+import Control.DeepSeq
+
 import FULE.Layout
 
 
@@ -43,6 +45,10 @@ data ComponentInfo k
     }
   deriving (Functor, Show)
 
+instance (NFData k) => NFData (ComponentInfo k) where
+  rnf i@(ComponentInfo { boundsOf = b, componentOf = k, renderGroupOf = g }) =
+    seq i . deepseq b . deepseq k . deepseq g $ ()
+
 
 -- | A convenience type-wrapper representing the rendering group a component
 --   is associated with. Rendering groups are used when multiple components
@@ -64,6 +70,10 @@ data Bounds
     -- ^ The Guide representing the /bottom/ edge of the bounding rectangle.
     }
   deriving (Show)
+
+instance NFData Bounds where
+  rnf a@(Bounds t l r b) =
+    seq a . deepseq t . deepseq l . deepseq r . deepseq b $ ()
 
 
 -- | A typeclass for retrieving Guides representing a bounding rectangle.

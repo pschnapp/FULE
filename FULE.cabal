@@ -30,6 +30,7 @@ library
       FULE.Component
       FULE.Container
       FULE.Container.Arrayed
+      FULE.Container.Clipped
       FULE.Container.Divided
       FULE.Container.Grid
       FULE.Container.Item

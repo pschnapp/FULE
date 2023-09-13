@@ -67,7 +67,7 @@ makeLayoutOp (Window w h gen c) = do
   left <- addGuideToLayout $ Absolute 0
   right <- addGuideToLayout $ Absolute w
   bottom <- addGuideToLayout $ Absolute h
-  let bounds = Bounds top left right bottom
+  let bounds = Bounds top left right bottom Nothing
   let proxy = Proxy :: Proxy k
   addToLayout (gen right bottom) proxy bounds Nothing
   addToLayout c proxy bounds Nothing

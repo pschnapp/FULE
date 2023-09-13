@@ -39,10 +39,10 @@ instance (Container c k m) => Container (Unreckoned c) k m where
   addToLayout (Unreckoned _ c) proxy bounds renderGroup = do
     reqWidth <- lift . lift $ minWidth c proxy
     reqHeight <- lift . lift $ minHeight c proxy
-    let Bounds t l r b = bounds
+    let Bounds t l r b cl = bounds
     right <- addGuideToLayout $ Relative (fromMaybe 0 reqWidth) l Asymmetric
     bottom <- addGuideToLayout $ Relative (fromMaybe 0 reqHeight) t Asymmetric
-    let bounds = Bounds t l right bottom
+    let bounds = Bounds t l right bottom cl
     addToLayout c proxy bounds renderGroup
 
 -- | Elide the horizontal size of the content.

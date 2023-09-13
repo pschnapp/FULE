@@ -68,12 +68,14 @@ data Bounds
     -- ^ The Guide representing the /right/ edge of the bounding rectangle.
     , bottomOf :: GuideID
     -- ^ The Guide representing the /bottom/ edge of the bounding rectangle.
+    , clippingOf :: Maybe Bounds
+    -- ^ Another @Bounds@ which may cause this one to clip.
     }
   deriving (Read, Show)
 
 instance NFData Bounds where
-  rnf a@(Bounds t l r b) =
-    seq a . deepseq t . deepseq l . deepseq r . deepseq b $ ()
+  rnf a@(Bounds t l r b c) =
+    seq a . deepseq t . deepseq l . deepseq r . deepseq b . deepseq c $ ()
 
 
 -- | A typeclass for retrieving Guides representing a bounding rectangle.
@@ -83,7 +85,7 @@ class HasBoundingGuides a where
   boundingGuidesFor :: Layout -> a -> [Int]
 
 instance HasBoundingGuides Bounds where
-  boundingGuidesFor layout (Bounds t l r b) =
+  boundingGuidesFor layout (Bounds t l r b _) =
     getGuides [t, l, r, b] layout
 
 instance HasBoundingGuides (ComponentInfo k) where

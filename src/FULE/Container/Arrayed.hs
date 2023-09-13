@@ -57,11 +57,12 @@ instance (Monad m) => Container (ArrayedM m k) k m where
     let (refBoundingGuide, getRefBoundingGuide) = case o of
           Horizontal -> (leftOf bounds, rightOf)
           Vertical -> (topOf bounds, bottomOf)
+    let clipping = clippingOf bounds
     alignmentGuide <- case o of
       Horizontal -> addGuideToLayout $ Relative v (topOf bounds) Asymmetric
       Vertical -> addGuideToLayout $ Relative h (leftOf bounds) Asymmetric
     loopingWith refBoundingGuide is $ \refBoundingGuide i -> do
-      bounds <- makeBounds h v o alignmentGuide refBoundingGuide i proxy
+      bounds <- makeBounds h v o alignmentGuide refBoundingGuide i proxy clipping
       addToLayout i proxy bounds renderGroup
       return (getRefBoundingGuide bounds)
 
@@ -71,8 +72,9 @@ loopingWith b as f = void (foldlM f b as)
 makeBounds
   :: (Monad m)
   => Int -> Int -> Orientation -> GuideID -> GuideID -> ItemM m k -> Proxy k
+  -> Maybe Bounds
   -> LayoutOp k m Bounds
-makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
+makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy clipping = do
   width <- fmap (fromMaybe 0) . lift . lift $ minWidth i proxy
   height <- fmap (fromMaybe 0) . lift . lift $ minHeight i proxy
   case dir of
@@ -83,7 +85,7 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
         else return refBoundingGuide
       right <- addGuideToLayout $ Relative width boundingGuide Asymmetric
       bottom <- addGuideToLayout $ Relative height alignmentGuide Asymmetric
-      return (Bounds alignmentGuide boundingGuide right bottom)
+      return (Bounds alignmentGuide boundingGuide right bottom clipping)
     Vertical -> do
       boundingGuide <-
         if vert /= 0
@@ -91,7 +93,7 @@ makeBounds horiz vert dir alignmentGuide refBoundingGuide i proxy = do
         else return refBoundingGuide
       right <- addGuideToLayout $ Relative width alignmentGuide Asymmetric
       bottom <- addGuideToLayout $ Relative height boundingGuide Asymmetric
-      return (Bounds boundingGuide alignmentGuide right bottom)
+      return (Bounds boundingGuide alignmentGuide right bottom clipping)
 
 -- | Array 'FULE.Container.Item.ItemM's horizontally with the specified padding.
 --

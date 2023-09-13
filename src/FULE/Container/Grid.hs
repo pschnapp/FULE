@@ -40,7 +40,7 @@ instance (Monad m) => Container (GridM m k) k m where
     let rights = elasVerts ++ [rightOf bounds]
     let bottoms = elasHorizs ++ [bottomOf bounds]
     let boundsForItems =
-          [Bounds t l r b
+          [Bounds t l r b (clippingOf bounds)
           | (t, b) <- zip tops bottoms
           , (l, r) <- zip lefts rights
           ]

@@ -46,7 +46,7 @@ makeLayoutDesign = LayoutDesign empty empty empty empty empty
 
 -- | An identifier for a Guide in a 'Layout' or 'LayoutDesign'.
 newtype GuideID = G Int
-  deriving (Eq, Show)
+  deriving (Eq, Ord, Read, Show)
 
 instance NFData GuideID where
   rnf g@(G i) = seq g . deepseq i $ ()

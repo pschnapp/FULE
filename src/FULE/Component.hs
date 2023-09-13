@@ -69,7 +69,7 @@ data Bounds
     , bottomOf :: GuideID
     -- ^ The Guide representing the /bottom/ edge of the bounding rectangle.
     }
-  deriving (Show)
+  deriving (Read, Show)
 
 instance NFData Bounds where
   rnf a@(Bounds t l r b) =

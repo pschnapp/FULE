@@ -18,9 +18,11 @@ import FULE.Layout
 
 -- | A typeclass for specifying the display requirements of a visual component.
 --
---   You'll need to have the @MultiParamTypeClasses@ language extension
---   enabled to use this and you may wish to have your instance use the
---   @{-# OVERLAPS #-}@ or @{-# OVERLAPPING #-}@ pragmas.
+--   A default implementation has been provided meaning you may wish to have
+--   your instances use the @{-# OVERLAPS #-}@ or @{-# OVERLAPPING #-}@ pragmas.
+--
+--   You'll need to have the @MultiParamTypeClasses@ language extension enabled
+--   to implement this.
 class (Monad m) => Component k m where
   -- | The /width/ the component requires on-screen, if any.
   --   The default implementation returns @Nothing@.
@@ -92,7 +94,7 @@ instance HasBoundingGuides (ComponentInfo k) where
   boundingGuidesFor layout component =
     boundingGuidesFor layout (boundsOf component)
 
--- | Retrieves the bounding Guides for a type in CSS order:
+-- | Retrieves the bounding Guides for a type in CSS-order:
 --   /top/, /right/, /bottom/, /left/.
 boundingGuidesInCSSOrderFor :: (HasBoundingGuides a) => Layout -> a -> [Int]
 boundingGuidesInCSSOrderFor layout component =

@@ -18,10 +18,10 @@ import FULE.Container
 newtype Clipped c = Clipped c
 
 instance (Container c k m) => Container (Clipped c) k m where
-  minWidth (Clipped c) proxy = minWidth c proxy
-  minHeight (Clipped c) proxy = minHeight c proxy
-  addToLayout (Clipped c) proxy bounds renderGroup =
-    addToLayout c proxy bounds{ clippingOf = Just bounds } renderGroup
+  minWidth (Clipped c) = minWidth c
+  minHeight (Clipped c) = minHeight c
+  addToLayout (Clipped c) proxy bounds =
+    addToLayout c proxy bounds{ clippingOf = Just bounds }
 
 -- | Create a container which clips any overflow.
 clipped :: c -> Clipped c

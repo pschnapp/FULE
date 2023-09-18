@@ -24,10 +24,12 @@ import FULE.Layout
 type WindowAdjustorGen k
   =  GuideID
   -- ^ The Guide to use to adjust the /width/ of the 'FULE.Layout' in response
-  --   to a change in the window size.
+  --   to a change in the window size. Adjustments should be made using the delta
+  --   of the old and new sizes.
   -> GuideID
   -- ^ The Guide to use to adjust the /height/ of the 'FULE.Layout' in response
-  --   to a change in the window size.
+  --   to a change in the window size. Adjustments should be made using the delta
+  --   of the old and new sizes.
   -> k
 
 -- | The base container of any (non-custom) 'FULE.Layout.Layout' representing

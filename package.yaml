@@ -43,7 +43,7 @@ library:
 tests:
   FULE-test:
     main:                Spec.hs
-    source-dirs:         test
+    source-dirs:         [examples, test]
     ghc-options:
     - -threaded
     - -rtsopts

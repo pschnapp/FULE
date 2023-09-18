@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -60,8 +60,11 @@ test-suite FULE-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Divided
+      Grid
       Paths_FULE
   hs-source-dirs:
+      examples
       test
   ghc-options: -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:

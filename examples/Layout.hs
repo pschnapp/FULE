@@ -15,7 +15,7 @@ import FULE
 makeLayout :: Int -> Int -> ([Bounds], Layout)
 makeLayout width height =
   second build -- we have to `build` the `LayoutDesign`
-  $ runState (designLayout width height) makeLayoutDesign
+  $ runState (designLayout width height) emptyLayoutDesign
 
 -- make a layout for a divided window with a resize bar
 designLayout :: Int -> Int -> State LayoutDesign [Bounds]

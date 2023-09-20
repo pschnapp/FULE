@@ -39,7 +39,7 @@ type LayoutOp k m = StateT LayoutOpState (WriterT [ComponentInfo k] m)
 -- | Run a 'LayoutOp' to create a 'FULE.Layout.LayoutDesign' and a list of
 --   components of type @k@.
 runLayoutOp :: (Monad m) => LayoutOp k m () -> m (LayoutDesign, [ComponentInfo k])
-runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS makeLayoutDesign 0)
+runLayoutOp = (toOutput <$>) . runWriterT . (`execStateT` LOS emptyLayoutDesign 0)
   where toOutput (LOS builder _, components) = (builder, components)
 
 -- | Add a Guide to the 'FULE.Layout.LayoutDesign'.

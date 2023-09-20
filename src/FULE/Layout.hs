@@ -1,6 +1,6 @@
 module FULE.Layout
  ( LayoutDesign
- , makeLayoutDesign
+ , emptyLayoutDesign
  --
  , GuideID
  , PlasticDependencyType(..)
@@ -40,8 +40,8 @@ data LayoutDesign
     }
 
 -- | Create a new 'LayoutDesign'.
-makeLayoutDesign :: LayoutDesign
-makeLayoutDesign = LayoutDesign empty empty empty empty empty
+emptyLayoutDesign :: LayoutDesign
+emptyLayoutDesign = LayoutDesign empty empty empty empty empty
 
 
 -- | An identifier for a Guide in a 'Layout' or 'LayoutDesign'.

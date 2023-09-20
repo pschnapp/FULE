@@ -27,6 +27,9 @@ library
   exposed-modules:
       FULE
       FULE.Common
+      FULE.Common.Orientation
+      FULE.Common.Padding
+      FULE.Common.SizedContent
       FULE.Component
       FULE.Container
       FULE.Container.Arrayed

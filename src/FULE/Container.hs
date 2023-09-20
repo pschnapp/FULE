@@ -53,10 +53,10 @@ addGuideToLayout r = do
 -- | Add a Guide constraint to the 'FULE.Layout.LayoutDesign'.
 addGuideConstraintToLayout
   :: (Monad m)
-  => GuideID -> GuideConstraintType -> GuideID -> LayoutOp k m ()
-addGuideConstraintToLayout forGuide constraint ofGuide = do
+  => GuideConstraint -> LayoutOp k m ()
+addGuideConstraintToLayout constraint = do
   state <- get
-  let builder = addGuideConstraint forGuide constraint ofGuide (builderOf state)
+  let builder = addGuideConstraint constraint (builderOf state)
   put state { builderOf = builder }
 
 -- | Get the next available render group from the 'LayoutOp' state and advance

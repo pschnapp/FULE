@@ -7,7 +7,7 @@ module FULE.Layout
  , GuideSpecification(..)
  , addGuide
  --
- , GuideConstraintType(..)
+ , GuideConstraint(..)
  , addGuideConstraint
  --
  , Layout
@@ -174,9 +174,21 @@ nextGuideNumberFor (LayoutDesign { designGuidesOf = guides }) =
 --------------------------------
 
 -- | The type of constraint one Guide should have relative to another.
-data GuideConstraintType
-  = LTE -- ^ Constrain a Guide to always be less-than or equal-to another.
-  | GTE -- ^ Constrain a Guide to always be greater-than or equal-to another.
+data GuideConstraint
+  = LTE
+    -- ^ Constrain a Guide to be always less-than or equal-to another.
+    { constrainedOf :: GuideID
+    -- ^ The Guide to constrain the movement of.
+    , referenceOf :: GuideID
+    -- ^ The reference Guide to constrain movement relative to.
+    }
+  | GTE
+    -- ^ Constrain a Guide to be always greater-than or equal-to another.
+    { constrainedOf :: GuideID
+    -- ^ The Guide to constrain the movement of.
+    , referenceOf :: GuideID
+    -- ^ The reference Guide to constrain movement relative to.
+    }
   deriving (Eq, Show)
 
 -- | Constrain the movement of one Guide relative to another.
@@ -186,21 +198,17 @@ data GuideConstraintType
 --   * __This feature is experimental!__
 --   * A Guide should be used /only once/ as the constrainee (first argument)
 --     for a given constraint-type -- this will not be checked!
-addGuideConstraint
-  :: GuideID -- ^ The Guide to constrain the movement of.
-  -> GuideConstraintType -- ^ The constraint-type.
-  -> GuideID -- ^ The reference Guide to constrain movement relative to.
-  -> LayoutDesign -> LayoutDesign
-addGuideConstraint (G forGuide) constraint (G ofGuide) design =
+addGuideConstraint :: GuideConstraint -> LayoutDesign -> LayoutDesign
+addGuideConstraint constraint design =
   case constraint of
-    LTE ->
+    LTE (G forGuide) (G ofGuide) ->
       design
       { designLTEConstraintsOf =
           set (forGuide, forGuide) 1
           . set (forGuide, ofGuide) (-1)
           $ designLTEConstraintsOf design
       }
-    GTE ->
+    GTE (G forGuide) (G ofGuide) ->
       design
       { designGTEConstraintsOf =
           set (forGuide, forGuide) 1

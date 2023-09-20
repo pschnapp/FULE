@@ -31,8 +31,8 @@ designLayout width height = do
   resizeBarBottom <- state . addGuide $ Relative (-100) windowBottom Asymmetric
   resizeBarTop <- state . addGuide $ Relative (-10) resizeBarBottom Symmetric
   -- constraints keep the resize bar within the bounds of the window when moving
-  modify $ addGuideConstraint resizeBarBottom LTE windowBottom
-  modify $ addGuideConstraint resizeBarTop GTE windowTop
+  modify . addGuideConstraint $ resizeBarBottom `LTE` windowBottom
+  modify . addGuideConstraint $ resizeBarTop `GTE` windowTop
   --
   -- make the bounds for the various areas
   let window =

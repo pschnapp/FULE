@@ -62,6 +62,7 @@ test-suite FULE-test
   other-modules:
       Divided
       Grid
+      Layout
       Paths_FULE
   hs-source-dirs:
       examples

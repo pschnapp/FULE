@@ -35,7 +35,7 @@ import FULE.Container
 -- > ...
 -- >
 -- > someFn :: forall m => m (ArrayedM m Widget)
--- > someFn = return
+-- > someFn = return $
 -- >   arrayedHoriz noPadding
 -- >     ([item someWidget
 -- >     , item someContainer

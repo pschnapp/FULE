@@ -39,6 +39,10 @@ data LayoutDesign
     , designGuidesOf :: Matrix Double
     }
 
+instance NFData LayoutDesign where
+  rnf (LayoutDesign p e lte gte g) =
+    deepseq p . deepseq e . deepseq lte . deepseq gte . deepseq g $ ()
+
 -- | Create a new 'LayoutDesign'.
 emptyLayoutDesign :: LayoutDesign
 emptyLayoutDesign = LayoutDesign empty empty empty empty empty
@@ -231,6 +235,10 @@ data Layout
     , layoutTransformationOf :: Matrix Double
     , layoutGuidesOf :: Matrix Double
     }
+
+instance NFData Layout where
+  rnf (Layout d lte gte tx g) =
+    deepseq d . deepseq lte . deepseq gte . deepseq tx . deepseq g $ ()
 
 instance Show Layout where
   show l = concat

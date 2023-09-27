@@ -16,8 +16,9 @@ module FULE.Internal.Sparse
  ) where
 
 import Prelude hiding (filter)
+import Control.DeepSeq
 import Data.List hiding (filter)
-import qualified Data.Map as Map
+import qualified Data.Map.Strict as Map
 
 
 type Pos = (Int, Int)
@@ -30,6 +31,9 @@ data Matrix a
     { dimensionsOf :: (Int, Int)
     , matrixOf :: Map.Map Pos a
     }
+
+instance (NFData a) => NFData (Matrix a) where
+  rnf (M (r, c) m) = seq r . seq c . deepseq m $ ()
 
 instance (Num a, Show a) => Show (Matrix a) where
   show (M (0, 0) _) = "[]"

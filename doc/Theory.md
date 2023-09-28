@@ -93,7 +93,7 @@ $$
   -25\\
   0
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -136,7 +136,7 @@ $$
   600\\
   500
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -209,7 +209,7 @@ $$
   -15\\
   0
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -243,7 +243,7 @@ $$
   0\\
   -15
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -285,7 +285,7 @@ $$
   0\\
   0
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -404,7 +404,7 @@ prop
   500\\
   490
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -488,7 +488,7 @@ $$
   600\\
   400\\
   \end{array}
-\right]
+\right] %
 =
 \left[
   \begin{array}{cc}
@@ -520,9 +520,8 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & (1-25\%) & (1-75\%) & 0 & 1\\
   \end{array}
-\right]
+\right] %
 =
-
 \left[
   \begin{array}{cc}
   1 & 0 & 0 & 0 & 0\\

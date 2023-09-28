@@ -5,23 +5,27 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           FULE
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/FULE#readme>
-homepage:       https://github.com/githubuser/FULE#readme
-bug-reports:    https://github.com/githubuser/FULE/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2022 Author name here
+version:        0.1.0
+synopsis:       Functional UI Layout Engine
+description:    Please see the README on GitHub at <https://github.com/pschnapp/FULE#readme>
+category:       GUI
+homepage:       https://github.com/pschnapp/FULE#readme
+bug-reports:    https://github.com/pschnapp/FULE/issues
+author:         Paul Schnapp
+maintainer:     paul.schnapp@gmail.com
+copyright:      2022, 2023 Paul Schnapp
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
     CHANGELOG.md
+    doc/Theory.md
+    doc/Usage.md
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/FULE
+  location: https://github.com/pschnapp/FULE
 
 library
   exposed-modules:

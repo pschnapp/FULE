@@ -538,7 +538,7 @@ $$
 
 We have two matrices that need to be applied produce an update to the layout, and we also have propagation to be concerned with. 
 
-To forgo some explanation, the following was determined to be the appropriate update procedure:
+To forgo some explanation, the following is currently the working model of the appropriate update procedure (though there are issues with it that I'm working on):
 
 Given a plasticity matrix $P$, an elasticity matrix $E$, an update vector $U$ and the layout-guide value vector $L_n$, the procedure to get the next vector of layout-guide values $L_{n+1}$ is:
 

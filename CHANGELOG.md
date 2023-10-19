@@ -9,7 +9,8 @@ and this project adheres to the
 ## Unreleased
  - Altered construction of the transform matrix in the layout `build` function to fix some issues
  - Updated the theory documentation to describe the new transform matrix
- - Applying the full transform matrix instead of just the propagated matrix to the constraint matrices in the layout `build` function
+ - Now applying the full transform matrix instead of just the propagated matrix to the constraint matrices in the layout `build` function
+ - Changed the grid container API to accept a tuple rather than two separate arguments for specifying the number of rows and columns the grid should have.
 
 ## 0.1.0 - 2023-09-28
 Initial release.

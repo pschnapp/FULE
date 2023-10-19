@@ -51,8 +51,7 @@ percents n = fmap (\i -> fromIntegral i / fromIntegral n) [1..n-1]
 
 -- | Create a 'GridM' of 'FULE.Container.Item.ItemM's.
 grid
-  :: Int -- ^ The number of rows the 'GridM' should have.
-  -> Int -- ^ The number of columns the 'GridM' should have.
+  :: (Int, Int) -- ^ The number of rows and columns the 'GridM' should have.
   -> [ItemM m k]
   -- ^ The 'FULE.Container.Item.ItemM's to put in the 'GridM'.
   --
@@ -65,5 +64,5 @@ grid
   --   available, then up-to the number of 'GridM' locations will be filled, but
   --   no more than that.
   -> GridM m k
-grid rows cols = Grid (max 0 rows) (max 0 cols)
+grid (rows, cols) = Grid (max 0 rows) (max 0 cols)
 

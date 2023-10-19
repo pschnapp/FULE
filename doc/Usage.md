@@ -38,7 +38,7 @@ Most containers require configuration arguments suitable for their particular fu
  - The dimensions of the GUI window that the layout will be displayed in
  - A function to create an (invisible) UI component that you should use to adjust the size of the `Layout` in response to changes in the GUI window's size
 
-For the requirements other containers have, consult their documentation on Hackage. For some working examples, see the [examples](../examples/) directory.
+For the requirements other containers have, consult their documentation on Hackage (not available yet). For some working examples, see the [examples](../examples/) directory.
 
 Once your layout has been defined, you'll build it by passing the `Window` to one of the `layout` or `layoutM` functions[^1]. The result of this will be a tuple of type `(Layout, [ComponentInfo k])`, where `k` is your component type.
 

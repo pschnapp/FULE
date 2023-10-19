@@ -256,18 +256,29 @@ propagate m =
   then m'
   else propagate m'
 
+residuals :: (RealFrac a) => Matrix a -> Matrix a
+residuals = fmap (\e -> if e > 1 then e+1 - fromIntegral (ceiling e) else e)
+
 -- | Create an enlivened 'Layout' from a 'LayoutDesign'.
 build :: LayoutDesign -> Layout
 build design =
   Layout
   { layoutDesignOf = design
-  , layoutLTEConstraintsOf = propagated `mul` designLTEConstraintsOf design
-  , layoutGTEConstraintsOf = propagated `mul` designGTEConstraintsOf design
-  , layoutTransformationOf = propagated `mul` designElasticityOf design
-  , layoutGuidesOf = designGuidesOf design
+  , layoutLTEConstraintsOf = transform `mul` lte
+  , layoutGTEConstraintsOf = transform `mul` gte
+  , layoutTransformationOf = transform
+  , layoutGuidesOf = dg
   }
   where
-    propagated = propagate (designPlasticityOf design)
+    LayoutDesign
+      { designPlasticityOf = plas
+      , designElasticityOf = elas
+      , designLTEConstraintsOf = lte
+      , designGTEConstraintsOf = gte
+      , designGuidesOf = dg
+      } = design
+    propagated = propagate (elas `add` plas)
+    transform = residuals (propagated `mul` elas `mul` propagated)
 
 -- | Transform a 'Layout' back into a 'LayoutDesign'.
 design :: Layout -> LayoutDesign

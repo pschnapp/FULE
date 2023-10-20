@@ -73,9 +73,7 @@ toRectangle :: Bounds -> Layout -> Rectangle
 toRectangle bounds layout =
   Rect left top (right - left) (bottom - top)
   where
-    [top, left, right, bottom] =
-      boundingGuidesFor layout bounds
-      `getGuides` layout
+    [top, left, right, bottom] = boundingGuidesFor layout bounds
 ```
 
 In the event that you're concerned about clipping content and are using the `Clipped` container, you can get the clipping rectangles from the `Bounds` as well:

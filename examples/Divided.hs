@@ -29,6 +29,9 @@ data Widget
   | UnsizedContent
   | SizedContent
   | DividerBar
+    -- A Horizontal Orientation would call for vertical movement,
+    -- so should be paired with watching for changes in the y-axis;
+    -- likewise with Vertical and the x-axis.
     { orientationOf :: Orientation
     , movementGuideOf :: GuideID
     }

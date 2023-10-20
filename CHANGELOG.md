@@ -7,6 +7,8 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+
+## 0.2.0 - 2023-10-20
  - Altered construction of the transform matrix in the layout `build` function to fix some issues
  - Updated the theory documentation to describe the new transform matrix
  - Now applying the full transform matrix instead of just the propagated matrix to the constraint matrices in the layout `build` function

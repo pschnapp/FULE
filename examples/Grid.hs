@@ -23,7 +23,7 @@ data Widget
 exampleGrid :: Int -> Int -> (Layout, [ComponentInfo Widget])
 exampleGrid width height = layout
   (window width height (ResizeControl width height)
-    (grid 2 3
+    (grid (2, 3)
       -- Annoyingly a type-annotation is required for the list of items which
       -- must be contained within an extra set of parentheses.
       ([item (Content "A")
@@ -47,7 +47,7 @@ exampleGridM = do
   (width, height) <- getWindowSize
   layoutM
     (window width height (ResizeControl width height)
-      (grid 2 3
+      (grid (2, 3)
         -- Annoyingly a type-annotation is required for the list of items which
         -- must be contained within an extra set of parentheses.
         ([item (Content "A")

@@ -52,7 +52,7 @@ Now that you have a layout to use, you can wire it to the rest of your applicati
 
 User-input should be piped in to your components in the `ComponentInfo`s; an instance of `Functor` is provided for this type so you can easily modify your components within it.
 
-Updates for the `Layout` should be part of the output your components generate. Updates can be applied to the `Layout` using the `reactToChange` or `reactToChanges` functions, giving them movement deltas for the guides that have moved.
+Updates for the `Layout` should be part of the output your components generate. Updates can be applied to the `Layout` using the `reactToChange` or `reactToChanges` functions, giving them movement deltas for the guides that have moved. (Guide values can be retrieved using the `getGuide` or `getGuides` functions.)
 
 To draw your components, and likely to provide input for them as well, you'll need to know their bounding rectangles within the `Layout`.
 
@@ -73,7 +73,9 @@ toRectangle :: Bounds -> Layout -> Rectangle
 toRectangle bounds layout =
   Rect left top (right - left) (bottom - top)
   where
-    [top, left, right, bottom] = boundingGuidesFor layout bounds
+    [top, left, right, bottom] =
+      boundingGuidesFor layout bounds
+      `getGuides` layout
 ```
 
 In the event that you're concerned about clipping content and are using the `Clipped` container, you can get the clipping rectangles from the `Bounds` as well:

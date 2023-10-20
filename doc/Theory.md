@@ -19,20 +19,20 @@ For example, a bare window has four guides associated with it: the _top_ and _le
 The layout-vector for this example is one with four rows, one for each guide:
 
 $$
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
   800\\
   600
   \end{matrix}
-\right)
+\right]
 $$
 
 If we were to divide the window into two parts content-wise, a top and a bottom, with the bottom portion being 100 pixels in height, we would add another value to the layout-vector to represent the dividing guide, giving it a value of 500 -- one-hundred pixels above the guide for the bottom of the window:
 
 $$
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -40,7 +40,7 @@ $$
   600\\
   500
   \end{matrix}
-\right)
+\right]
 $$
 
 When one wants to obtain the boundaries of a visual component, one just queries the layout-vector for the required guides' values.
@@ -60,7 +60,7 @@ Continuing with our split-window example from above: say we wanted the bottom po
 The plastic dependency matrix encoding this linkage would look like this:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -68,7 +68,7 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
+\right]
 $$
 
 This is essentially an identity matrix, but note the extra $1$ in the bottom row: this non-zero entry links the division guide (represented by the bottom row) to the bottom window guide (represented by the next-from-bottom row) so that when an update occurs to the window guide, it will be applied to the division guide as well.
@@ -76,7 +76,7 @@ This is essentially an identity matrix, but note the extra $1$ in the bottom row
 If the window were resized to be 25 pixels shorter, the propagation of this change to the division guide would happen like so:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -84,8 +84,8 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -93,9 +93,8 @@ $$
   -25\\
   0
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -103,13 +102,13 @@ $$
   -25\\
   -25
   \end{matrix}
-\right)
+\right]
 $$
 
 And the update to the layout vector would then happen like this:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -117,8 +116,8 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -126,9 +125,9 @@ $$
   -25\\
   0
   \end{matrix}
-\right)
+\right]
 +
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -136,9 +135,8 @@ $$
   600\\
   500
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -146,7 +144,7 @@ $$
   575\\
   475
   \end{matrix}
-\right)
+\right]
 $$
 
 ### Symmetries
@@ -158,7 +156,7 @@ To demonstrate a _symmetric_ relationship, let's add yet another guide to the la
 Our layout-vector now looks like this:
 
 $$
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -167,7 +165,7 @@ $$
   500\\
   490
   \end{matrix}
-\right)
+\right]
 $$
 
 For the behavior of this resize bar to make sense, any change to either one of the resize bar's guides must be applied to the other, otherwise the bar would expand and contract in size.
@@ -175,7 +173,7 @@ For the behavior of this resize bar to make sense, any change to either one of t
 The plasticity matrix therefore should link them together with a $1$ on both sides of the diagonal in the row and column for each bar guide:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -184,13 +182,13 @@ $$
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
+\right]
 $$
 
 Now a direct update to either one of the guides will affect the other:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -199,8 +197,8 @@ $$
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -209,9 +207,8 @@ $$
   -15\\
   0
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -220,11 +217,11 @@ $$
   -15\\
   -15
   \end{matrix}
-\right)
+\right]
 $$
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -233,8 +230,8 @@ $$
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -243,9 +240,8 @@ $$
   0\\
   -15
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -254,7 +250,7 @@ $$
   -15\\
   -15
   \end{matrix}
-\right)
+\right]
 $$
 
 The relationship of these two guides is thus symmetric.
@@ -266,7 +262,7 @@ Relationships between the guides specified in this way allows us to propagate ch
 Say the user resized the window, like before, with the latest plasticity matrix:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -275,8 +271,8 @@ $$
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -285,9 +281,8 @@ $$
   0\\
   0
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -296,7 +291,7 @@ $$
   -25\\
   0
   \end{matrix}
-\right)
+\right]
 $$
 
 The link between the bottom window guide and the division guide causes the change to propagate to the division guide as before, preserving their 100 pixel difference, but the change does not continue on to affect the other guide of the resize bar. It should, however, because the other resize bar guide is in a relationship with the division guide and should move the same amount that it does.
@@ -310,7 +305,7 @@ Each application results in one propagation -- from window to division and from 
 Applying the matrix twice is equivalent to squaring it, then applying it, so let's see what happens when we square it:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -319,9 +314,8 @@ $$
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right) ^ 2
-=
-\left(
+\right] ^{2} =
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -330,7 +324,7 @@ $$
   0 & 0 & 0 & 2 & 2 & 2\\
   0 & 0 & 0 & 1 & 2 & 2\\
   \end{matrix}
-\right)
+\right]
 $$
 
 The entry to link the guides that we'd wanted to be linked _is_ a $1$ in the squared matrix, like we'd desired, but other entries have been changed from a $1$ to a $2$, which we didn't want. We can remediate this by setting all non-zero entries of the matrix to $1$ after the square.
@@ -342,8 +336,8 @@ Alternatively, we could iteratively square the matrix (and set things to $1$) un
 We'll call this iterative propagation operation $prop$:
 
 $$
-prop(
-\left(
+prop\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -352,10 +346,9 @@ prop(
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
-\right)
-)
-=
-\left(
+\right]
+\right) =
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -364,14 +357,14 @@ prop(
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 1 & 1 & 1\\
   \end{matrix}
-\right)
+\right]
 $$
 
 The update procedure now becomes:
 
 $$
-prop(
-\left(
+prop\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0 & 0\\
@@ -380,9 +373,9 @@ prop(
   0 & 0 & 0 & 1 & 1 & 1\\
   0 & 0 & 0 & 0 & 1 & 1
   \end{matrix}
+\right]
 \right)
-)
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -391,9 +384,9 @@ prop(
   0\\
   0
   \end{matrix}
-\right)
+\right]
 +
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -402,9 +395,8 @@ prop(
   500\\
   490
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -413,7 +405,7 @@ prop(
   475\\
   465
   \end{matrix}
-\right)
+\right]
 $$
 
 which updates all the guides we'd wanted to change.
@@ -429,7 +421,7 @@ Suppose we wanted to divide a window into two vertical halves and have each half
 If we recycle our 800x600 window for this new example, the layout vector for the window will have a vertical guide (at 400 pixels) between the two vertical window sides:
 
 $$
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -437,13 +429,13 @@ $$
   600\\
   400\\
   \end{matrix}
-\right)
+\right]
 $$
 
 And the elasticity matrix to split the difference between the two sides' movements for this guide when an update takes place will be:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -451,7 +443,7 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0.5 & 0.5 & 0 & 1\\
   \end{matrix}
-\right)
+\right]
 $$
 
 The two $0.5$ entries in this matrix represent the amount of influence each of the window-side guides has on the division guide; since it's halfway between them they each exert half of the influence on it.
@@ -459,7 +451,7 @@ The two $0.5$ entries in this matrix represent the amount of influence each of t
 If a user were to expand the right side of the window by 50 pixels then we'd have an update process of:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -467,8 +459,8 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0.5 & 0.5 & 0 & 1\\
   \end{matrix}
-\right)
-\left(
+\right]
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -476,9 +468,9 @@ $$
   0\\
   0\\
   \end{matrix}
-\right)
+\right]
 +
-\left(
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -486,9 +478,8 @@ $$
   600\\
   400\\
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   0\\
   0\\
@@ -496,7 +487,7 @@ $$
   600\\
   425\\
   \end{matrix}
-\right)
+\right]
 $$
 
 which keeps the division guide in the center of the window.
@@ -510,7 +501,7 @@ Remember that these values represent the influence the window-side guides have o
 The values for these entries in the elasticity matrix then are one minus the percent distance the dependent guide is from the influencing guide, so the new elasticity matrix would be:
 
 $$
-\left(
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -518,9 +509,8 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & (1-25\%) & (1-75\%) & 0 & 1\\
   \end{matrix}
-\right)
-=
-\left(
+\right] =
+\left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
   0 & 1 & 0 & 0 & 0\\
@@ -528,7 +518,7 @@ $$
   0 & 0 & 0 & 1 & 0\\
   0 & 0.75 & 0.25 & 0 & 1\\
   \end{matrix}
-\right)
+\right]
 $$
 
 # Update Cycle
@@ -560,7 +550,7 @@ present(M) =
 \right.
 $$
 
-The $\star$ is a new operation: it is a modified matrix multiplication operation; whereas in normal matrix multiplication the elements are multiplied piece-wise and then summed, in $\star$ the summation is replaced with the product of the non-zero elements of the piece-wise products.
+The $\star$ is a new operation: it is a modified matrix multiplication operation; whereas in normal matrix multiplication the elements are multiplied piece-wise and then summed, in $\star$ the summation is replaced with the product of the non-zero elements of the piece-wise multiplication.
 
 Using $\star$ within $prop$ replaces having to reset the entries to $1$ each iteration, and it also helps propagate the elastic coefficients more correctly in the calculation of $T$[^1].
 

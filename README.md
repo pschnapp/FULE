@@ -8,6 +8,14 @@ The [osabe project](https://bitbucket.org/osabe-app/code/) can be referenced as 
 
 If you have any questions or issues feel free to contact me. I'd also be interested to hear about any uses of this library.
 
+## Stability
+
+Basic usage should be stable, especially when using containers that rely on plastic relationships.
+
+Deeply nesting containers that rely on elastic relationships (`Grid`, anything with centering) will lead to improper behavior during size changes, and this is an area still under development.
+
+It is recommended to keep your nesting of elastic containers to *two levels* if there will be resizing -- the initial layout works fine for deeper levels of nesting though if things will be static.
+
 ## Roadmap
 
 ### Planning

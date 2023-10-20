@@ -12,6 +12,7 @@ module FULE.Internal.Sparse
  , add
  , sub
  , mul
+ , star
  , filter
  ) where
 
@@ -82,6 +83,13 @@ mul :: (Num a) => Matrix a -> Matrix a -> Matrix a
 mul (M (r, _) ml) (M (_, c) mr) =
   -- not the most efficient algorithm but very concise
   M (r, c) $ Map.fromListWith (+) $
+  [((rl,cr), vl*vr) | ((rl,cl), vl) <- ps ml, ((rr,cr), vr) <- ps mr, cl==rr]
+  where ps = Map.toList
+
+star :: (Num a) => Matrix a -> Matrix a -> Matrix a
+star (M (r, _) ml) (M (_, c) mr) =
+  -- not the most efficient algorithm but very concise
+  M (r, c) $ Map.fromListWith (*) $
   [((rl,cr), vl*vr) | ((rl,cl), vl) <- ps ml, ((rr,cr), vr) <- ps mr, cl==rr]
   where ps = Map.toList
 

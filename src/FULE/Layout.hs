@@ -251,13 +251,10 @@ instance Show Layout where
 
 propagate :: (Num a) => Matrix a -> Matrix a
 propagate m =
-  let m' = fmap (const 1) $ m `mul` m
+  let m' = m `star` m
   in if count m' == count m
   then m'
   else propagate m'
-
-residuals :: (RealFrac a) => Matrix a -> Matrix a
-residuals = fmap (\e -> if e > 1 then e+1 - fromIntegral (ceiling e) else e)
 
 -- | Create an enlivened 'Layout' from a 'LayoutDesign'.
 build :: LayoutDesign -> Layout
@@ -277,8 +274,8 @@ build design =
       , designGTEConstraintsOf = gte
       , designGuidesOf = dg
       } = design
-    propagated = propagate (elas `add` plas)
-    transform = residuals (propagated `mul` elas `mul` propagated)
+    propagated = propagate (fmap (const 1) elas `star` plas)
+    transform = propagated `star` elas `star` propagated
 
 -- | Transform a 'Layout' back into a 'LayoutDesign'.
 design :: Layout -> LayoutDesign

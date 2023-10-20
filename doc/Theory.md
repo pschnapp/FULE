@@ -520,7 +520,6 @@ $$
   \end{matrix}
 \right)
 =
-
 \left(
   \begin{matrix}
   1 & 0 & 0 & 0 & 0\\
@@ -536,14 +535,14 @@ $$
 
 We have two matrices that need to be applied to produce an update to the layout, and we also have propagation to be concerned with.
 
-To forgo some explanation, the following is the working update procedure (as determined through reason, experimentation, and divine guidance):
+To forgo some explanation, the following is the current, working update procedure (as determined by providence, reason, and experimentation):
 
 Given a plasticity matrix $P$, an elasticity matrix $E$, an update vector $U$, and the layout-guide value vector $L_n$, the procedure to get the next vector of layout-guide values $L_{n+1}$ is:
 
 $$
 \begin{align}
-D & = prop(E+P) \\
-T & = res(DED) \\
+D & = prop(present(E) \star P) \\
+T & = D \star E \star D \\
 L_{n+1} & = T U + L_n
 \end{align}
 $$
@@ -551,19 +550,23 @@ $$
 where:
 
 $$
-res(M) =
+present(M) =
 \forall{e}\in{M}: e \leftarrow
-\left\{
+\left\lbrace
 \begin{array}{ll}
-e+1-\left\lceil e \right\rceil & e > 1\\
-e & \text{otherwise}
+1 & e \neq 0 \\
+0 & \text{otherwise}
 \end{array}
 \right.
 $$
 
-($res$, short for residuals, is similar to the step of resetting values to $1$ during propagation, but at this point we have to be concerned with keeping fractional portions of the values because of the use of the elasticity matrix.)
+The $\star$ is a new operation: it is a modified matrix multiplication operation; whereas in normal matrix multiplication the elements are multiplied piece-wise and then summed, in $\star$ the summation is replaced with the product of the non-zero elements of the piece-wise products.
+
+Using $\star$ within $prop$ replaces having to reset the entries to $1$ each iteration, and it also helps propagate the elastic coefficients more correctly in the calculation of $T$[^1].
 
 Since $P$ and $E$ don't change each time an update is applied we can pre-compute the combined transformation matrix $T$ just once for efficiency's sake and use it for every update cycle; any changes to the composition of the layout (and thus to $P$ and $E$) will require rebuilding $T$ though.
+
+[^1]: Sadly things still aren't propagating correctly when deeply nesting elastic containers, and this is still a work in progress.
 
 # Guide Constraints
 

@@ -329,14 +329,14 @@ $$
 
 The entry to link the guides that we'd wanted to be linked _is_ a $1$ in the squared matrix, like we'd desired, but other entries have been changed from a $1$ to a $2$, which we didn't want. We can remediate this by setting all non-zero entries of the matrix to $1$ after the square.
 
-Successive applications of the plasticity matrix serve to propagate the linkage of the guides (if we set things to $1$ after), so a general propagation algorithm implementation would involve applying apply the matrix $n-1$ times for an $n$-by-$n$ matrix, just to make sure we cover all the linkages.
+Successive applications of the plasticity matrix serve to propagate the linkage of the guides, so a general propagation algorithm would involve applying apply the matrix $n-1$ times for an $n \times n$ matrix (and setting things to $1$ after), just to make sure we cover all the linkages.
 
 Alternatively, we could iteratively square the matrix (and set things to $1$) until there were no more changes upon iteration, and that should take care of linking everything together.
 
-We'll call this iterative propagation operation $prop$:
+We'll call this iterative propagation operation $prop_{P}$:
 
 $$
-prop\left(
+prop_{P}\left(
 \left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
@@ -363,7 +363,7 @@ $$
 The update procedure now becomes:
 
 $$
-prop\left(
+prop_{P}\left(
 \left[
   \begin{matrix}
   1 & 0 & 0 & 0 & 0 & 0\\
@@ -409,6 +409,8 @@ prop\left(
 $$
 
 which updates all the guides we'd wanted to change.
+
+**In-depth note:** internally $prop_{P}$ has been implemented with an operator I'm calling $\star$, which is like matrix multiplication but whereas in regular multiplication the piece-wise products of the arguments' respective rows and columns are _summed_, in $\star$ the non-zero elements of the piece-wise products are _multiplied_ -- this saves us having to reset the values to $1$ afterwards. The iteration of $\star$ is done until the matrix becomes [idempotent](https://en.wikipedia.org/wiki/Idempotent_matrix) under the operation.
 
 ## Elastic Dependencies
 
@@ -521,42 +523,49 @@ $$
 \right]
 $$
 
+### Propagation
+
+Like the plastic dependencies, the elastic dependencies must be propagated because we can have transitive linkages between them -- one elastic guide can depend on other elastic guides that depend on still other elastic guides that depend finally on plastic guides, e.g..
+
+The propagation operation for the elasticity matrix must be different than that for the plasticity matrix because we want entries in the result to remain less than $1$ so they will still be elastic.
+
+After propagation the resulting matrix should have entries for the elastic guides in columns for the non-elastic guides on which they depend, transitively or intransitively, since that's what ultimately will produce a change to the elastic guides during an update.
+
+Thanks to some divine guidance during experimentation I was led to the following procedure for elastic propagation:
+
+Let $E$ be an $n \times n$ elasticity matrix, but [hollow](https://en.wikipedia.org/wiki/Hollow_matrix) (sans identity elements); the propagation procedure $prop_E$ then is:
+
+$$
+prop_E(E) = \sum_{i=1}^{n} E^i
+$$
+
+Because $E$ appears to be [nilpotent](https://en.wikipedia.org/wiki/Nilpotent_matrix) we can stop the summation early, saving us some computation cycles.
+
+This propagation operation can leave non-zero entries for some of the elastic guides that we don't necessarily want, but they don't appear to be negatively affecting anything so they are being left as-is.
+
 # Update Cycle
 
 We have two matrices that need to be applied to produce an update to the layout, and we also have propagation to be concerned with.
 
-To forgo some explanation, the following is the current, working update procedure (as determined by providence, reason, and experimentation):
+To forgo some explanation, the following is the current working update procedure (as determined by providence, reason, and experimentation):
 
-Given a plasticity matrix $P$, an elasticity matrix $E$, an update vector $U$, and the layout-guide value vector $L_n$, the procedure to get the next vector of layout-guide values $L_{n+1}$ is:
+Given a plasticity matrix $P$ (with identity entries), an hollow elasticity matrix $E$ (without identity entries), an update vector $U$, and the layout-guide value vector $L_n$, the procedure to get the next vector of layout-guide values $L_{n+1}$ is:
 
 $$
 \begin{align}
-D & = prop(present(E) \star P) \\
-T & = D \star E \star D \\
+P_{P} & = prop_{P}(P) \\
+P_{E} & = prop_{E}(E) \\
+P_{H} & = P_{P} - I \\
+T & = P_{P} + P_{E} + P_{H}P_{E} + P_{E}P_{H} + P_{H}P_{E}P_{H} \\
 L_{n+1} & = T U + L_n
 \end{align}
 $$
 
-where:
+where $I$ is the identity matrix.
 
-$$
-present(M) =
-\forall{e}\in{M}: e \leftarrow
-\left\lbrace
-\begin{array}{ll}
-1 & e \neq 0 \\
-0 & \text{otherwise}
-\end{array}
-\right.
-$$
+The $P_{H}$ terms in $T$ serve to mix the propagations of $E$ and $P$ together since we need them to interact in the layout for it to respond properly to changes.
 
-The $\star$ is a new operation: it is a modified matrix multiplication operation; whereas in normal matrix multiplication the elements are multiplied piece-wise and then summed, in $\star$ the summation is replaced with the product of the non-zero elements of the piece-wise multiplication.
-
-Using $\star$ within $prop$ replaces having to reset the entries to $1$ each iteration, and it also helps propagate the elastic coefficients more correctly in the calculation of $T$[^1].
-
-Since $P$ and $E$ don't change each time an update is applied we can pre-compute the combined transformation matrix $T$ just once for efficiency's sake and use it for every update cycle; any changes to the composition of the layout (and thus to $P$ and $E$) will require rebuilding $T$ though.
-
-[^1]: Sadly things still aren't propagating correctly when deeply nesting elastic containers, and this is still a work in progress.
+Since $P$ and $E$ don't change each time an update $U$ is applied we can pre-compute the combined transformation matrix $T$ just once for efficiency's sake and use it for every update cycle; any changes to the composition of the layout (and thus to $P$ or $E$) will require rebuilding $T$ though.
 
 # Guide Constraints
 

@@ -121,7 +121,7 @@ addAbsolute position design =
   ( G gid
   , LayoutDesign
     { designPlasticityOf = set (gid, gid) 1 (designPlasticityOf design)
-    , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
+    , designElasticityOf = expandTo (gid, gid) (designElasticityOf design)
     , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
     , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) (fromIntegral position) (designGuidesOf design)
@@ -136,7 +136,7 @@ addRelative offset (G ref) dep design@(LayoutDesign { designGuidesOf = guides })
   , LayoutDesign
     { designPlasticityOf =
         set (gid, gid) 1 . set (gid, ref) 1 . symRelat $ designPlasticityOf design
-    , designElasticityOf = set (gid, gid) 1 (designElasticityOf design)
+    , designElasticityOf = expandTo (gid, gid) (designElasticityOf design)
     , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
     , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) pos guides
@@ -156,8 +156,8 @@ addBetween (G ref1, pct1) (G ref2, pct2) design@(LayoutDesign { designGuidesOf =
     { designPlasticityOf = set (gid, gid) 1 (designPlasticityOf design)
     , designElasticityOf =
         -- yes the indicies are supposed to mismatch in this
-        set (gid, gid) 1 . set (gid, ref1) pct2 . set (gid, ref2) pct1 $
-          designElasticityOf design
+        set (gid, ref1) pct2 . set (gid, ref2) pct1 $
+        expandTo (gid, gid) (designElasticityOf design)
     , designLTEConstraintsOf = expandTo (gid, gid) (designLTEConstraintsOf design)
     , designGTEConstraintsOf = expandTo (gid, gid) (designGTEConstraintsOf design)
     , designGuidesOf = set (gid, 1) pos guides
@@ -249,12 +249,24 @@ instance Show Layout where
     , "\n"
     ]
 
-propagate :: (Num a) => Matrix a -> Matrix a
-propagate m =
+propPlas :: (Num a) => Matrix a -> Matrix a
+propPlas m =
   let m' = m `star` m
+  -- Note: could possibly encounter a cycle and not know it, but this matrix
+  -- should be idempotent so this condition should be ok.
   in if count m' == count m
   then m'
-  else propagate m'
+  else propPlas m'
+
+
+propElas :: (Num a) => Matrix a -> Matrix a
+propElas m = go m m
+  where
+    go s p =
+      let p' = m `mul` p
+      in if count p' == 0
+      then s
+      else go (s `add` p') p'
 
 -- | Create an enlivened 'Layout' from a 'LayoutDesign'.
 build :: LayoutDesign -> Layout
@@ -274,8 +286,13 @@ build design =
       , designGTEConstraintsOf = gte
       , designGuidesOf = dg
       } = design
-    propagated = propagate (fmap (const 1) elas `star` plas)
-    transform = propagated `star` elas `star` propagated
+    pp = propPlas plas
+    pe = propElas elas
+    ph = pp `sub` (eye . fst . dims $ plas)
+    transform = pp `add` pe
+      `add` (ph `mul` pe)
+      `add` (pe `mul` ph)
+      `add` (ph `mul` pe `mul` ph)
 
 -- | Transform a 'Layout' back into a 'LayoutDesign'.
 design :: Layout -> LayoutDesign

@@ -2,6 +2,7 @@ module FULE.Internal.Sparse
  ( Matrix
  , Pos
  , empty
+ , eye
  , matrix
  , dims
  , expandTo
@@ -48,6 +49,9 @@ instance Functor Matrix where
 
 empty :: Matrix a
 empty = M (0, 0) Map.empty
+
+eye :: (Num a) => Int -> Matrix a
+eye dim = matrix (dim, dim) [((r,c), 1) | (r, c) <- zip [1..dim] [1..dim]]
 
 matrix :: (Int, Int) -> [(Pos, a)] -> Matrix a
 matrix dims entries = M dims (Map.fromList entries)

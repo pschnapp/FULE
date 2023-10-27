@@ -569,7 +569,7 @@ Since $P$ and $E$ don't change each time an update $U$ is applied we can pre-com
 
 # Guide Constraints
 
-FULE also offers a way to constrain the movement of one guide relative to another, but as this feature is yet more experimental I'll not cover the theory at this time. The above discussion should give you a good basis to understand what's going on for that though should you wish to dive into the code.
+FULE also offers a way to constrain the movement of one guide relative to another, but as this feature is a pretty straight-forward augmentation of the update procedure above I'll not cover the theory here; you should have a good basis to understand what's going on should you wish to dive into the code.
 
 # Analysis
 

@@ -199,9 +199,10 @@ data GuideConstraint
 --
 --   __Important Notes:__
 --
---   * __This feature is experimental!__
+--   * Never constrain a Guide against itself
 --   * A Guide should be used /only once/ as the constrainee (first argument)
---     for a given constraint-type -- this will not be checked!
+--     for a given constraint-type
+--   * The above conditions will not be checked!
 addGuideConstraint :: GuideConstraint -> LayoutDesign -> LayoutDesign
 addGuideConstraint constraint design =
   case constraint of
@@ -273,8 +274,8 @@ build :: LayoutDesign -> Layout
 build design =
   Layout
   { layoutDesignOf = design
-  , layoutLTEConstraintsOf = transform `mul` lte
-  , layoutGTEConstraintsOf = transform `mul` gte
+  , layoutLTEConstraintsOf = lte
+  , layoutGTEConstraintsOf = gte
   , layoutTransformationOf = transform
   , layoutGuidesOf = dg
   }
@@ -337,6 +338,6 @@ doReactToChanges entries layout =
     changes = matrix (dims g) entries
     changed = t `mul` changes `add` g
     adjusted = changed
-      `sub` Matrix.filter (> 0) (lte `mul` changed)
-      `sub` Matrix.filter (< 0) (gte `mul` changed)
+      `sub` (t `mul` Matrix.filter (> 0) (lte `mul` changed))
+      `sub` (t `mul` Matrix.filter (< 0) (gte `mul` changed))
 

@@ -15,12 +15,6 @@ If you have any questions or issues feel free to contact me. I'd also be interes
  - Flat data-structures
  - Monad-friendly API
 
-## Stability
-
-Basic usage of the latest commit should be stable.
-
-The only thing that's still a WIP is _constraints_, and that should only cause issues when using the `Divided` container in `dynamic` mode.
-
 ## Roadmap
 
 ### Planning

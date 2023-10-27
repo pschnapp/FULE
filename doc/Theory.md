@@ -410,7 +410,7 @@ $$
 
 which updates all the guides we'd wanted to change.
 
-**In-depth note:** internally $prop_{P}$ has been implemented with an operator I'm calling $\star$, which is like matrix multiplication but whereas in regular multiplication the piece-wise products of the arguments' respective rows and columns are _summed_, in $\star$ the non-zero elements of the piece-wise products are _multiplied_ -- this saves us having to reset the values to $1$ afterwards. The iteration of $\star$ is done until the matrix becomes [idempotent](https://en.wikipedia.org/wiki/Idempotent_matrix) under the operation.
+**In-depth note:** internally $prop_{P}$ has been implemented with an operator I'm calling $\star$, which is like matrix multiplication but whereas in regular multiplication the piece-wise products of the arguments' respective rows and columns are _summed_, in $\star$ the non-zero elements of the piece-wise products are _multiplied_ -- this saves us having to reset the values to $1$ afterwards. The iterative squaring using $\star$ is done until the matrix becomes [idempotent](https://en.wikipedia.org/wiki/Idempotent_matrix) under the operation.
 
 ## Elastic Dependencies
 

@@ -547,7 +547,7 @@ This propagation operation can leave non-zero entries for some of the elastic gu
 
 We have two matrices that need to be applied to produce an update to the layout, and we also have propagation to be concerned with.
 
-To forgo some explanation, the following is the current working update procedure (as determined by providence, reason, and experimentation):
+To forgo some explanation, the following is the current working update procedure as determined by providence, reason, and experimentation:
 
 Given a plasticity matrix $P$ (with identity entries), an hollow elasticity matrix $E$ (without identity entries), an update vector $U$, and the layout-guide value vector $L_n$, the procedure to get the next vector of layout-guide values $L_{n+1}$ is:
 

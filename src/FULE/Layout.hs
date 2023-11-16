@@ -195,7 +195,8 @@ data GuideConstraint
     }
   deriving (Eq, Show)
 
--- | Constrain the movement of one Guide relative to another.
+-- | Constrain the movement of one Guide relative to another. (Still slightly
+--    experimental.)
 --
 --   __Important Notes:__
 --
@@ -203,6 +204,8 @@ data GuideConstraint
 --   * A Guide should be used /only once/ as the constrainee (first argument)
 --     for a given constraint-type
 --   * The above conditions will not be checked!
+--   * If a guide depends on multiple other guides that are simultaneously
+--     affected by constraints, things may go a bit wonky, just sayin'.
 addGuideConstraint :: GuideConstraint -> LayoutDesign -> LayoutDesign
 addGuideConstraint constraint design =
   case constraint of

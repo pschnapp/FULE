@@ -8,6 +8,9 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.2.0.3 - 2023-11-16
+ - Tweaked documentation for release to Hackage
+
 ## 0.2.0.2 - 2023-10-27
  - Fixed constraints
  - Updated documentation

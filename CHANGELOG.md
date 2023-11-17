@@ -7,6 +7,7 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+ - Corrected bounds on dependencies
 
 ## 0.2.0.3 - 2023-11-16
  - Tweaked documentation for release to Hackage

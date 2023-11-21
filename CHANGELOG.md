@@ -7,6 +7,7 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+ - Made Window size a single argument
  - Corrected bounds on dependencies
 
 ## 0.2.0.3 - 2023-11-16

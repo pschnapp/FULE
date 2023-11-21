@@ -45,14 +45,13 @@ data Window c k
 
 -- | Create a 'Window'.
 window
-  :: Int -- ^ The width of the window.
-  -> Int -- ^ The height of the window.
+  :: (Int, Int) -- ^ The width and height of the window.
   -> WindowAdjustorGen k
   -- ^ A function to construct a 'FULE.Component.Component' for reacting to
   --   changes in the size of the window in the encompassing GUI framework.
   -> c -- ^ The content of the window.
   -> Window c k
-window width height = Window (max 0 width) (max 0 height)
+window (width, height) = Window (max 0 width) (max 0 height)
 
 
 -- | Build a layout for a 'Window' in the specified monad @m@.

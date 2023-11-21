@@ -44,7 +44,7 @@ staticDivided = do
   (width, height) <- getWindowSize
   let staticSize :: Dynamics Widget = static
   return $ layout
-    (window width height (ResizeControl width height)
+    (window (width, height) (ResizeControl width height)
       (sizedTop sizedToContents staticSize
         SizedContent
         UnsizedContent
@@ -55,7 +55,7 @@ dynamicDivided = do
   (width, height) <- getWindowSize
   let dynamicSize :: Dynamics Widget = dynamic DividerBar 10
   return $ layout
-    (window width height (ResizeControl width height)
+    (window (width, height) (ResizeControl width height)
       (sizedTop (sizedTo 100) dynamicSize
         -- Depending on the content, you may wish to use `clipped` to prevent
         -- it from displaying out of bounds when the container is resized.

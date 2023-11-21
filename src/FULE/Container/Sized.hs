@@ -43,9 +43,8 @@ sizedVert height = Sized Nothing (Just $ max 0 height)
 
 -- | Add a size to the content in both dimensions.
 sized
-  :: Int -- ^ The width the content should have.
-  -> Int -- ^ The height the content should have.
+  :: (Int, Int) -- ^ The width and height the content should have.
   -> c -- ^ The content.
   -> Sized c
-sized width height = Sized (Just $ max 0 width) (Just $ max 0 height)
+sized (width, height) = Sized (Just $ max 0 width) (Just $ max 0 height)
 

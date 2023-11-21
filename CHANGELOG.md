@@ -7,6 +7,7 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+ - Made Sized size a single argument
  - Made Window size a single argument
  - Corrected bounds on dependencies
 

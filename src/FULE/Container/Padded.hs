@@ -18,6 +18,7 @@ import FULE.Component
 import FULE.Container
 import FULE.Container.Config
 import FULE.Layout
+import FULE.LayoutOp
 
 
 -- | A container with padding around the content.

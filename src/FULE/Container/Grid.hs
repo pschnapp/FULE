@@ -24,6 +24,7 @@ import FULE.Container
 import FULE.Container.Item
 import FULE.Internal.Util
 import FULE.Layout
+import FULE.LayoutOp
 
 
 -- | A two-dimensional grid of visual 'FULE.Container.Item.ItemM's, evenly spaced.

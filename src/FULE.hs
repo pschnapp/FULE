@@ -22,6 +22,7 @@ module FULE
  , module FULE.Container.Unreckoned
  , module FULE.Container.Window
  , module FULE.Layout
+ , module FULE.LayoutOp
  ) where
 
 import FULE.Component
@@ -39,4 +40,5 @@ import FULE.Container.Sized
 import FULE.Container.Unreckoned
 import FULE.Container.Window
 import FULE.Layout
+import FULE.LayoutOp
 

@@ -25,6 +25,7 @@ import Data.Proxy
 import FULE.Component
 import FULE.Container
 import FULE.Layout
+import FULE.LayoutOp
 
 
 -- | Type of a function to produce a 'FULE.Component.Component' to adjust

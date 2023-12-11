@@ -33,6 +33,7 @@ import FULE.Container.Config
 import FULE.Container.Item
 import FULE.Internal.Util
 import FULE.Layout
+import FULE.LayoutOp
 
 
 -- | An array (horizontal or vertical) of visual 'FULE.Container.Item.ItemM's

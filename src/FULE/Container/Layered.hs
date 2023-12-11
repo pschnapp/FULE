@@ -22,6 +22,7 @@ import Data.Maybe
 import FULE.Container
 import FULE.Container.Item
 import FULE.Internal.Util
+import FULE.LayoutOp
 
 
 -- | This container layers multiple visual 'FULE.Container.Item.ItemM's within

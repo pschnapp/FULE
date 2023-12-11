@@ -26,6 +26,7 @@ import FULE.Component
 import FULE.Container
 import FULE.Container.Config
 import FULE.Layout
+import FULE.LayoutOp
 
 
 -- | A container complementary to 'FULE.Container.Sized.Sized': whereas @Sized@

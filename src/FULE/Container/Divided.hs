@@ -31,6 +31,7 @@ import FULE.Container
 import FULE.Container.Config
 import FULE.Internal.Util
 import FULE.Layout
+import FULE.LayoutOp
 
 
 data SizedSide = SizedTop | SizedLeft | SizedRight | SizedBottom

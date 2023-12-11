@@ -29,6 +29,7 @@ import Data.Proxy
 import FULE.Component
 import FULE.Container
 import FULE.Layout
+import FULE.LayoutOp
 
 
 data Position

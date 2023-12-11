@@ -12,6 +12,7 @@ and this project adheres to the
  - Made Window size a single argument
  - Corrected bounds on dependencies
  - Updated documentation
+ - Reorganized (and split) modules
 
 ## 0.2.0.3 - 2023-11-16
  - Tweaked documentation for release to Hackage

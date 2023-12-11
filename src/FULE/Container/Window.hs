@@ -1,5 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
 
+-- |
+-- Module      : FULE.Container.Window
+-- Description : The @Window@ Container and layout construction functions.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- This module contains @Window@, the base 'FULE.Container.Conatiner' for all
+-- layouts, and the @layout@ and @layoutM@ functions for building a
+-- 'Fule.Laout.Layout' from it.
 module FULE.Container.Window
  ( Window
  , WindowAdjustorGen

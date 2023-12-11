@@ -1,6 +1,14 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Padded
+-- Description : The @Padded@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to add padding around content.
 module FULE.Container.Padded
  ( Padded
  , padded

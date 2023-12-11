@@ -1,3 +1,11 @@
+-- |
+-- Module      : FULE
+-- Description : The full library (@import@ this!)
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- This is the full library, just @import@ this module.
 module FULE
  ( module FULE.Common
  , module FULE.Component

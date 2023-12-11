@@ -1,6 +1,14 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Clipped
+-- Description : The @Clipped@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to specify that content overflow should be clipped.
 module FULE.Container.Clipped
  ( Clipped
  , clipped

@@ -1,6 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Layered
+-- Description : The @Layered@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to layer multiple items within the same
+-- 'FULE.Component.Bounds'.
 module FULE.Container.Layered
  ( LayeredM
  , Layered
@@ -19,7 +28,7 @@ import FULE.Internal.Util
 --   the same bounding rectangle, one on top of the other. Z-ordering is not
 --   really taken into account since that depends on how you are using the
 --   layout output, but the @ItemM@s will appear in the output of
---   'FULE.Container.runLayoutOp' in the same order they're in when passed to
+--   'FULE.Container.runLayoutOp' in the same order in which they're passed to
 --   the 'layered' function.
 newtype LayeredM m k = Layered [ItemM m k]
 

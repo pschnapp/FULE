@@ -1,6 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Positioned
+-- Description : The @Positioned@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to position content relative to its parent
+-- container, including in the center.
 module FULE.Container.Positioned
  ( Positioned
  , topLeft

@@ -1,3 +1,12 @@
+-- |
+-- Module      : FULE.Common.Orientation
+-- Description : Visual orientation config.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- The @Orientation@ datatype is used to specify the visual orientation of an
+-- element.
 module FULE.Common.Orientation where
 
 import Control.DeepSeq

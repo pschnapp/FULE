@@ -1,6 +1,17 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Unreckoned
+-- Description : The @Unreckoned@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to remove dimension info from content when it's
+-- considered during the layout process.
+--
+-- To /add/ size to content, see the 'FULE.Container.Sized.Sized' container.
 module FULE.Container.Unreckoned
  ( Unreckoned
  , unreckonedHoriz
@@ -53,7 +64,7 @@ unreckonedHoriz = Unreckoned (Just Horizontal)
 unreckonedVert :: c -> Unreckoned c
 unreckonedVert = Unreckoned (Just Vertical)
 
--- | Elide all sizes of the content.
+-- | Elide all sizes associated with the content.
 unreckoned :: c -> Unreckoned c
 unreckoned = Unreckoned Nothing
 

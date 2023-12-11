@@ -2,6 +2,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Item
+-- Description : Wrapper for heterogenous content.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A wrapper for heterogenous content to be used by other
+-- `FULE.Container.Container's.
 module FULE.Container.Item
  ( ItemM
  , Item
@@ -21,7 +30,7 @@ import FULE.Container
 --   When using @ItemM@ you'll likely need to:
 --   
 --   * Use the [@ScopedTypeVariables@](https://wiki.haskell.org/Scoped_type_variables)
---     language extension and explicitly specify a @forall@ for @m@ in your
+--     language extension and explicitly specify a @forall m@ in your
 --     function declaration (if a type-variable is being used)
 --   * Explicitly specify the type of your list of @ItemM@ in the call to the
 --     aggregating container and wrap the list in parentheses

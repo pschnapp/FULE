@@ -1,3 +1,14 @@
+-- |
+-- Module      : FULE.Layout
+-- Description : Low-level layout functionality.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- This is the basic, low-level layout functionality.
+--
+-- You'll start by creating a 'FULE.Layout.LayoutDesign' and then make a usable
+-- 'FULE.Layout.Layout' from it by 'FULE.Layout.build'ing it.
 module FULE.Layout
  ( LayoutDesign
  , emptyLayoutDesign

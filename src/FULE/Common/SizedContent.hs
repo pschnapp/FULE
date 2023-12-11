@@ -1,3 +1,11 @@
+-- |
+-- Module      : FULE.Common.SizedContent
+-- Description : Content size config.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- Datatype and functions for specifying the size of content.
 module FULE.Common.SizedContent where
 
 

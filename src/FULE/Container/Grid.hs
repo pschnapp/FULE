@@ -1,6 +1,16 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Grid
+-- Description : The @Grid@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A two-dimensional grid of items, evenly spaced.
+--
+-- You may also wish to consider the 'FULE.Container.Arrayed' Container.
 module FULE.Container.Grid
  ( GridM
  , Grid
@@ -16,7 +26,7 @@ import FULE.Internal.Util
 import FULE.Layout
 
 
--- | A two-dimensional grid of visual 'FULE.Container.Item.ItemM's.
+-- | A two-dimensional grid of visual 'FULE.Container.Item.ItemM's, evenly spaced.
 data GridM m k
   = Grid
     { rowCountOf :: Int
@@ -55,14 +65,13 @@ grid
   -> [ItemM m k]
   -- ^ The 'FULE.Container.Item.ItemM's to put in the 'GridM'.
   --
-  --   Placement of the 'FULE.Container.Item.ItemM's will start with the top,
-  --   left position of the 'GridM' and proceed to the right, wrapping around
-  --   to the next row when the end of the previous row has been reached.
+  --   Placement of the 'FULE.Container.Item.ItemM's will start with the
+  --   top-left position of the grid and proceed to the right, wrapping
+  --   around to the next row when the end of the previous row has been reached.
   --
-  --   If the number of elements in the list passed as an argument to this
-  --   parameter does not meet or exceeds the number of 'GridM' locations
-  --   available, then up-to the number of 'GridM' locations will be filled, but
-  --   no more than that.
+  --   If the number of elements in this list does not meet or exceeds the number
+  --   of grid locations available, then up-to the number of grid locations will
+  --   be filled, but no more than that.
   -> GridM m k
 grid (rows, cols) = Grid (max 0 rows) (max 0 cols)
 

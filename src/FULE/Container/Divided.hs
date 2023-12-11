@@ -1,6 +1,14 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Divided
+-- Description : The @Divided@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' that is divided in half, horizontally or vertically.
 module FULE.Container.Divided
  ( Divided
  , BarControlGen

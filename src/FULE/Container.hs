@@ -3,6 +3,14 @@
 {-# LANGUAGE MonoLocalBinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container
+-- Description : The @Container@ typeclass.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A typeclass for creating containers of visual content.
 module FULE.Container
  ( Container(..)
  , LayoutOp

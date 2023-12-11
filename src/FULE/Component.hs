@@ -2,6 +2,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Component
+-- Description : The @Component@ typeclass
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A typeclass which any visual component made by you should implement;
+-- related datatypes.
 module FULE.Component
  ( Component(..)
  , ComponentInfo(..)
@@ -53,8 +62,10 @@ instance (NFData k) => NFData (ComponentInfo k) where
 
 
 -- | A convenience type-wrapper representing the rendering group a component
---   is associated with. Rendering groups are used when multiple components
+--   is associated with. Rendering groups are tracked when multiple components
 --   overlap (in the z-axis) or are part of containers which overlap.
+--   (They are not used internally but are tracked as a convenience for the
+--   consumer.)
 type RenderGroup = Maybe Int
 
 

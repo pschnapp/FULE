@@ -1,3 +1,11 @@
+-- |
+-- Module      : FULE.Common.Padding
+-- Description : Padding config.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- Datatype and functions for specifying visual padding.
 module FULE.Common.Padding where
 
 

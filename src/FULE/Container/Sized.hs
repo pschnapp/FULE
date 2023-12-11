@@ -1,6 +1,18 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Sized
+-- Description : The @Sized@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Conatiner.Container' to specify or override the (inherent) size of
+-- content.
+--
+-- To /remove/ the size of content from consideration during the layout process
+-- see the 'FULE.Container.Unreckoned.Unreckoned' container.
 module FULE.Container.Sized
  ( Sized
  , sizedHoriz
@@ -14,9 +26,6 @@ import FULE.Container
 
 
 -- | A container which specifies or overrides the size of content in the layout.
---
---   To /remove/ the size of content from consideration during the layout process
---   see the 'FULE.Container.Unreckoned.Unreckoned' container.
 data Sized c
   = Sized
     { widthOf :: Maybe Int

@@ -2,6 +2,17 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+-- |
+-- Module      : FULE.Container.Arrayed
+-- Description : The @Arrayed@ Container.
+-- Copyright   : (c) Paul Schnapp, 2023
+-- License     : BSD3
+-- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
+--
+-- A 'FULE.Container.Container' to display items one after another, either
+-- vertically or horizontally. Items are spaced according to their inherent sizes.
+--
+-- You may also wish to consider a 'FULE.Container.Grid.Grid'.
 module FULE.Container.Arrayed
  ( ArrayedM
  , Arrayed
@@ -25,7 +36,9 @@ import FULE.Layout
 
 
 -- | An array (horizontal or vertical) of visual 'FULE.Container.Item.ItemM's
---   in a layout.
+--   in a layout. Each item will occupy a different amount of space in the array;
+--   if you wish each item to be evenly spaced, use a 'FULE.Container.Grid.Grid'
+--   instead.
 data ArrayedM m k
   = Arrayed
     { horizPaddingOf :: Int

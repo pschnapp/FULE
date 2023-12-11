@@ -1,8 +1,8 @@
 -- This module contains an example using `Layout` (and `LayoutDesign`).
 --
 -- `Layout` is a low-level construct of this library; you may wish to use one of
--- the higher-level constructs if you're not doing anything super custom, or you
--- can use the higher-level constructs then augment the result using `Layout`
+-- the higher-level Containers if you're not doing anything super custom, or you
+-- can use the higher-level Containers then augment the result using `Layout`
 -- afterward.
 --
 module Layout where

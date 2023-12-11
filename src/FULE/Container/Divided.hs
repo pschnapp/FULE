@@ -26,9 +26,9 @@ import Control.Monad.Trans.Class
 import Data.Maybe
 import Data.Proxy
 
-import FULE.Common
 import FULE.Component
 import FULE.Container
+import FULE.Container.Config
 import FULE.Internal.Util
 import FULE.Layout
 

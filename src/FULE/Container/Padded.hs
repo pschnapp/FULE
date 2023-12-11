@@ -14,9 +14,9 @@ module FULE.Container.Padded
  , padded
  ) where
 
-import FULE.Common
 import FULE.Component
 import FULE.Container
+import FULE.Container.Config
 import FULE.Layout
 
 

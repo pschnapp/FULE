@@ -22,9 +22,9 @@ module FULE.Container.Unreckoned
 import Control.Monad.Trans.Class
 import Data.Maybe
 
-import FULE.Common
 import FULE.Component
 import FULE.Container
+import FULE.Container.Config
 import FULE.Layout
 
 

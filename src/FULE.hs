@@ -7,11 +7,11 @@
 --
 -- This is the full library, just @import@ this module.
 module FULE
- ( module FULE.Common
- , module FULE.Component
+ ( module FULE.Component
  , module FULE.Container
  , module FULE.Container.Arrayed
  , module FULE.Container.Clipped
+ , module FULE.Container.Config
  , module FULE.Container.Divided
  , module FULE.Container.Grid
  , module FULE.Container.Item
@@ -24,11 +24,11 @@ module FULE
  , module FULE.Layout
  ) where
 
-import FULE.Common
 import FULE.Component
 import FULE.Container
 import FULE.Container.Arrayed
 import FULE.Container.Clipped
+import FULE.Container.Config
 import FULE.Container.Divided
 import FULE.Container.Grid
 import FULE.Container.Item

@@ -30,14 +30,14 @@ source-repository head
 library
   exposed-modules:
       FULE
-      FULE.Common
-      FULE.Common.Orientation
-      FULE.Common.Padding
-      FULE.Common.SizedContent
       FULE.Component
       FULE.Container
       FULE.Container.Arrayed
       FULE.Container.Clipped
+      FULE.Container.Config
+      FULE.Container.Config.Orientation
+      FULE.Container.Config.Padding
+      FULE.Container.Config.SizedContent
       FULE.Container.Divided
       FULE.Container.Grid
       FULE.Container.Item

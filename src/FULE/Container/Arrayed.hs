@@ -27,9 +27,9 @@ import Data.Functor.Identity
 import Data.Maybe
 import Data.Proxy
 
-import FULE.Common
 import FULE.Component
 import FULE.Container
+import FULE.Container.Config
 import FULE.Container.Item
 import FULE.Internal.Util
 import FULE.Layout

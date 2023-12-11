@@ -1,12 +1,12 @@
 -- |
--- Module      : FULE.Common.SizedContent
+-- Module      : FULE.Container.Config.SizedContent
 -- Description : Content size config.
 -- Copyright   : (c) Paul Schnapp, 2023
 -- License     : BSD3
 -- Maintainer  : Paul Schnapp <paul.schnapp@gmail.com>
 --
 -- Datatype and functions for specifying the size of content.
-module FULE.Common.SizedContent where
+module FULE.Container.Config.SizedContent where
 
 
 -- | The size that the sized portion of a container should have;

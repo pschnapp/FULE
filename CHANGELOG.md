@@ -7,9 +7,11 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
- - Made Sized size a single argument
+ - Made `Sized`'s `sized` function's size a single argument
+ - Made the `Sized` container properly override the inherent size of content.
  - Made Window size a single argument
  - Corrected bounds on dependencies
+ - Updated documentation
 
 ## 0.2.0.3 - 2023-11-16
  - Tweaked documentation for release to Hackage

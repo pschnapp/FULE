@@ -2,7 +2,7 @@
 
 The Functional UI Layout Engine (FULE - pronounced "fuel") is an experimental Haskell library for positioning UI elements on-screen. The layout will react dynamically to changes in window-size or manipulations by the user, but it is up to you to wire these events from the GUI framework to the FULE layout and to draw the components themselves on the screen.
 
-Check out the [usage documentation](doc/Usage.md) and [examples](examples/) for more information, or if curious you can dive into [the theory behind it](doc/Theory.md).
+Check out the [usage documentation](https://github.com/pschnapp/FULE/blob/main/doc/Usage.md) and [examples](https://github.com/pschnapp/FULE/blob/main/examples) for more information, or if curious you can dive into [the theory behind it](https://github.com/pschnapp/FULE/blob/main/doc/Theory.md).
 
 The [osabe project](https://bitbucket.org/osabe-app/code/) can be referenced as an example use of the library -- it is for this appliction that FULE was written in the first place.
 

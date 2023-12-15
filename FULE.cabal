@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           FULE
-version:        0.2.0.3
+version:        0.3.0
 synopsis:       Functional UI Layout Engine
 description:    Please see the README on GitHub at <https://github.com/pschnapp/FULE#readme>
 category:       GUI

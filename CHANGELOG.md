@@ -9,10 +9,10 @@ and this project adheres to the
 ## Unreleased
  - Updated Usage documentation
 
-## 0.3.0 META
+## 0.3.0 META - 2024-01-09
  - Changed dependency bounds to make the build on Hackage work.
 
-## 0.3.0
+## 0.3.0 - 2023-12-15
  - Made `Sized`'s `sized` function's size a single argument
  - Made the `Sized` container properly override the inherent size of content.
  - Made Window size a single argument

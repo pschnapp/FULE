@@ -7,6 +7,10 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+ - Updated Usage documentation
+
+## 0.3.0 META
+ - Changed dependency bounds to make the build on Hackage work.
 
 ## 0.3.0
  - Made `Sized`'s `sized` function's size a single argument

@@ -40,6 +40,8 @@ ghc-options:
   - -Wredundant-constraints
 
 library:
+  ghc-options:
+  - -Wunused-packages
   source-dirs: src
 
 tests:

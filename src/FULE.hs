@@ -23,6 +23,7 @@ module FULE
  , module FULE.Container.Window
  , module FULE.Layout
  , module FULE.LayoutOp
+ , module FULE.Reactor
  ) where
 
 import FULE.Component
@@ -41,4 +42,5 @@ import FULE.Container.Unreckoned
 import FULE.Container.Window
 import FULE.Layout
 import FULE.LayoutOp
+import FULE.Reactor
 

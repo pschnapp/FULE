@@ -7,6 +7,9 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+
+## 0.3.1 - 2024-02-15
+ - Added `Reactor` type and `Reaction` typeclass for heterogeneous components
  - Updated Usage documentation
 
 ## 0.3.0 META - 2024-01-09

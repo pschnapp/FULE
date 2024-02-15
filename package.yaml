@@ -1,5 +1,5 @@
 name:                FULE
-version:             0.3.0
+version:             0.3.1
 github:              "pschnapp/FULE"
 license:             BSD3
 author:              "Paul Schnapp"
@@ -25,8 +25,8 @@ dependencies:
 - base >= 4.7 && < 5
 - containers >= 0.6.5 && < 0.7
 - deepseq >= 1.4.6 && < 1.5
-- mtl >= 2.2.2 && < 2.3
-- transformers >= 0.5.6 && < 0.6
+- mtl >= 2.2.2 && < 2.4
+- transformers >= 0.5.6 && < 0.7
 
 ghc-options:
   #- -Wall

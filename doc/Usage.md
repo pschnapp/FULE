@@ -39,7 +39,7 @@ The first thing you'll probably want to do in your code is define your visual co
 
 `Component` is a monad-friendly typeclass should you need to interact with stateful data to retrieve sizing information for your components.
 
-Your components will either need to be all of the same type or to have some sort of [wrapper for heterogenous types](https://wiki.haskell.org/Heterogenous_collections) around them in order for FULE to use them.
+Your components will either need to be all of the same type or to have some sort of [wrapper for heterogeneous types](https://wiki.haskell.org/Heterogenous_collections) around them in order for FULE to use them. As of **v0.3.1** FULE offers the `Reactor` and `Reactor'` types for this; types contained in them are interacted with by implementing the `Reaction` typeclass.
 
 A convenience implementation of `Component` has been provided for you, for any type, which specifices no height or width requirements. When you define your own instance(s) you should override the default by using the `{-# OVERLAPS #-}` or `{-# OVERLAPPING #-}` pragmas on it (or them).
 

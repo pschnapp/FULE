@@ -8,7 +8,7 @@ and this project adheres to the
 
 ## Unreleased
 
-## 0.3.1 - 2024-02-15
+## 0.3.1 - 2024-02-16
  - Added `Reactor` type and `Reaction` typeclass for heterogeneous components
  - Updated Usage documentation
 

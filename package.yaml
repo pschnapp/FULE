@@ -4,7 +4,7 @@ github:              "pschnapp/FULE"
 license:             BSD3
 author:              "Paul Schnapp"
 maintainer:          "paul.schnapp@gmail.com"
-copyright:           "2022, 2023 Paul Schnapp"
+copyright:           "2022-2024 Paul Schnapp"
 
 extra-source-files:
 - README.md

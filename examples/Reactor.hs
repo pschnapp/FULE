@@ -231,7 +231,7 @@ presenterUI = do
   let infos' = adjustComponentLayouts layout infos
   presenterUILoop layout infos' viewIn
 
-presenterUILoop :: forall m . (Monad m) => Layout -> CIRs m -> UIMessage -> m ()
+presenterUILoop :: (Monad m) => Layout -> CIRs m -> UIMessage -> m ()
 presenterUILoop layout infos0 viewIn = do
   -- VIEW (contd)
   let infos1 = addInput (ViewInput viewIn) infos0

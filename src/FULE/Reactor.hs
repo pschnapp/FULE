@@ -39,15 +39,16 @@ import FULE.Component
 
 -- | An interface for interacting with the contents of a @Reactor@:
 --
---    - The @r@ type-parameter is the reacting type (inside the @Reactor@).
+--    - The @r@ type-parameter is the reacting type (the data inside the @Reactor@).
 --    - The @i@ type-parameter is the type of input the reaction will accept
 --      in the @addReactant@ method.
 --    - The @ogadt@ type-parameter is a higher-order type used to specify what type
 --      of output the @getProduct@ method should produce. You'll likely want to
 --      use a GADT for this type.
 --
---   __IMPORTANT NOTE:__ when implementing these methods you'll need a
---   catchall case for any input or output cases you're not handling.
+--   __IMPORTANT NOTE:__ when implementing these methods you'll need a catchall
+--   case for any input or output cases you're not handling, otherwise you'll
+--   get a runtime error!
 class Reaction r i ogadt where
 
   -- | Add a reactant (input) to the reaction.

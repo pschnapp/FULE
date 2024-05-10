@@ -7,6 +7,8 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+
+## 0.3.1.1 - 2024-05-10
  - Simplified update procedure
 
 ## 0.3.1 - 2024-02-16

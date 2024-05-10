@@ -9,7 +9,7 @@ and this project adheres to the
 ## Unreleased
 
 ## 0.3.1.1 - 2024-05-10
- - Simplified update procedure
+ - Simplified transform calculation
 
 ## 0.3.1 - 2024-02-16
  - Added `Reactor` type and `Reaction` typeclass for heterogeneous components

@@ -555,15 +555,12 @@ $$
 \begin{align}
 P_{P} & = prop_{P}(P) \\
 P_{E} & = prop_{E}(E) \\
-P_{H} & = P_{P} - I \\
-T & = P_{P} + P_{E} + P_{H}P_{E} + P_{E}P_{H} + P_{H}P_{E}P_{H} \\
+T & = P_{P} (I + P_{E}P_{P}) \\
 L_{n+1} & = T U + L_n
 \end{align}
 $$
 
 where $I$ is the identity matrix.
-
-The $P_{H}$ terms in $T$ serve to mix the propagations of $E$ and $P$ together since we need them to interact in the layout for it to respond properly to changes.
 
 Since $P$ and $E$ don't change each time an update $U$ is applied we can pre-compute the combined transformation matrix $T$ just once for efficiency's sake and use it for every update cycle; any changes to the composition of the layout (and thus to $P$ or $E$) will require rebuilding $T$ though.
 

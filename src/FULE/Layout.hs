@@ -303,11 +303,7 @@ build design =
       } = design
     pp = propPlas plas
     pe = propElas elas
-    ph = pp `sub` (eye . fst . dims $ plas)
-    transform = pp `add` pe
-      `add` (ph `mul` pe)
-      `add` (pe `mul` ph)
-      `add` (ph `mul` pe `mul` ph)
+    transform = pp `mul` ((eye . fst . dims $ plas) `add` (pe `mul` pp))
 
 -- | Transform a 'Layout' back into a 'LayoutDesign'.
 design :: Layout -> LayoutDesign

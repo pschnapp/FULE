@@ -13,7 +13,7 @@ homepage:       https://github.com/pschnapp/FULE#readme
 bug-reports:    https://github.com/pschnapp/FULE/issues
 author:         Paul Schnapp
 maintainer:     paul.schnapp@gmail.com
-copyright:      2022, 2023 Paul Schnapp
+copyright:      2022-2024 Paul Schnapp
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple

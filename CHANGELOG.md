@@ -8,6 +8,9 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.3.1.2 - 2025-08-05
+ - Bumped upper bound of `deepseq` lib to 1.6 (fixes issue #1)
+
 ## 0.3.1.1 - 2024-05-10
  - Simplified transform calculation
 

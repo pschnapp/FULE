@@ -7,6 +7,8 @@ and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
 ## Unreleased
+ - Bumped upper bound of `containers` to < 0.9 -- haven't tested but the changes look ok based on its changelog
+ - Bumped LTS version
 
 ## 0.3.1.2 - 2025-08-05
  - Bumped upper bound of `deepseq` lib to 1.6 (fixes issue #1)
